@@ -46,11 +46,11 @@ module.exports = {
     // https://eslint.vuejs.org/user-guide/#why-doesn-t-it-work-on-vue-files
     // required to lint *.vue files
     'vue'
-    
+
     // https://github.com/typescript-eslint/typescript-eslint/issues/389#issuecomment-509292674
     // Prettier has not been included as plugin to avoid performance impact
     // add it as an extension for your IDE
-    
+
   ],
 
   globals: {
@@ -68,7 +68,7 @@ module.exports = {
 
   // add your custom rules here
   rules: {
-    
+
     'prefer-promise-reject-errors': 'off',
 
     quotes: ['warn', 'single', { avoidEscape: true }],
@@ -84,6 +84,22 @@ module.exports = {
     'no-unused-vars': 'off',
 
     // allow debugger during development only
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-console': 0,
+    // 'no-debugger': 'warn',
+    'vue/valid-template-root': 'off',
+    // 'no-unused-vars': 0,
+    'no-empty-function': 0,
+    'no-empty-interface': 0,
+    'no-async-promise-executor': 0,
+    '@typescript-eslint/no-empty-function': 0,
+    '@typescript-eslint/no-empty-interface': 0,
+    '@typescript-eslint/no-explicit-any': 0,
+    '@typescript-eslint/no-unused-vars': 0,
+    '@typescript-eslint/ban-types': 0,
+    '@typescript-eslint/ban-ts-comment': 0,
+    'vue/multi-word-component-names': 0,
+    'vue/no-unused-vars': 0,
+    'vue/no-unused-components': 0
   }
 }

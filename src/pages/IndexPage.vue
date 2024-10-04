@@ -1,55 +1,70 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <example-component
-      title="Example component"
-      active
-      :todos="todos"
-      :meta="meta"
-    ></example-component>
+  <q-page class="q-pa-md">
+    <div style="margin-bottom: 20px; font-size: 18px; font-weight: bold; color: #1976D2">모바일 업무 지원</div>
+    <div class="row items-center justify-center q-gutter-lg">
+      <q-btn
+        size="md"
+        color="white"
+        text-color="black"
+        stack
+        style="min-width: 130px"
+        @click="changeUrl('/sales-activity')"
+      >
+        <q-icon name="calendar_month" style="font-size: 40px;" />
+        <div style="margin-top: 10px;font-size: 15px">영업활동관리</div>
+      </q-btn>
+
+      <q-btn
+        size="md"
+        color="white"
+        text-color="black"
+        stack
+        style="min-width: 130px"
+        @click="changeUrl('/dashboard')"
+      >
+        <q-icon name="bar_chart" style="font-size: 40px;" />
+        <div style="margin-top: 10px;font-size: 15px">수주판매현황</div>
+      </q-btn>
+      <q-btn
+        size="md"
+        color="white"
+        text-color="black"
+        stack
+        style="min-width: 130px"
+        @click="changeUrl('/company-info')"
+      >
+        <q-icon name="emoji_transportation" style="font-size: 40px;" />
+        <div style="margin-top: 10px;font-size: 15px">고객정보</div>
+      </q-btn>
+      <q-btn
+        size="md"
+        color="white"
+        text-color="black"
+        stack
+        style="min-width: 130px"
+        @click="changeUrl('/company-contact')"
+      >
+        <q-icon name="diversity_3" style="font-size: 40px;" />
+        <div style="margin-top: 10px;font-size: 13px">고객담당자정보</div>
+      </q-btn>
+    </div>
   </q-page>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import { Todo, Meta } from 'components/models';
-import ExampleComponent from 'components/ExampleComponent.vue';
-
+import {defineComponent} from 'vue';
+import { useRouter } from 'vue-router';
 export default defineComponent({
   name: 'IndexPage',
-
-  components: {
-    ExampleComponent
-  },
-
+  components: {},
   setup () {
-    const todos = ref<Todo[]>([
-      {
-        id: 1,
-        content: 'ct1'
-      },
-      {
-        id: 2,
-        content: 'ct2'
-      },
-      {
-        id: 3,
-        content: 'ct3'
-      },
-      {
-        id: 4,
-        content: 'ct4'
-      },
-      {
-        id: 5,
-        content: 'ct5'
-      }
-    ]);
-
-    const meta = ref<Meta>({
-      totalCount: 1200
-    });
-
-    return { todos, meta };
+    const router = useRouter();
+    function changeUrl(newUrl: string) {
+      router.push(newUrl);
+    }
+    return{
+      changeUrl
+    }
   }
 });
 </script>

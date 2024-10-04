@@ -27,7 +27,7 @@ export interface EssentialLinkProps {
   caption?: string;
   link?: string;
   icon?: string;
-};
+}
 
 export default defineComponent({
   name: 'EssentialLink',
@@ -44,7 +44,7 @@ export default defineComponent({
 
     link: {
       type: String,
-      default: '#'
+      default: ''
     },
 
     icon: {
