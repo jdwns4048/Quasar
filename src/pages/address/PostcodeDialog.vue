@@ -1,15 +1,11 @@
 <template>
     <q-dialog v-model="isOpened" persistent :maximized="maximizedToggle" transition-show="slide-up" transition-hide="slide-down">
         <q-card class="bg-primary text-white qCard">
-            <q-bar>
-                <q-space />
-                <q-btn dense flat icon="close" v-close-popup>
-                    <q-tooltip class="bg-white text-primary">Close</q-tooltip>
-                </q-btn>
-            </q-bar>
-
             <q-card-section class="test-cardSection">
-                <div class="text-h6">주소 검색</div>
+                <div class="dialogHeader">
+                    <span class="text-h6">주소 검색</span>
+                    <q-btn class="bg-white text-primary closeBtn" v-close-popup> 닫기 </q-btn>
+                </div>
                 <div ref="postcodeWrap" class="postcode-iframe-wrap"></div>
                 <div class="guide"></div>
             </q-card-section>
@@ -79,6 +75,12 @@ export default {
 };
 </script>
 <style scoped>
+.dialogHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .qCard {
     height: 100vh;
 }
@@ -90,14 +92,16 @@ export default {
 .postcode-iframe-wrap {
     width: 100%;
     height: 100%;
-}
-
-.text-h6 {
-    margin-bottom: 30px;
+    margin-top: 30px;
 }
 
 .guide {
     color: white;
     margin-top: 10px;
+}
+
+.closeBtn {
+    width: 100px; /* 원하는 너비 */
+    height: 30px; /* 원하는 높이 */
 }
 </style>
