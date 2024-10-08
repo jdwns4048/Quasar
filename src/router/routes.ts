@@ -6,10 +6,6 @@ const routes: RouteRecordRaw[] = [
         component: () => import('layouts/MainLayout.vue'),
         children: [
             {path: '', component: () => import('pages/IndexPage.vue')},
-            {path: 'sales-activity', component: () => import('pages/sales/SalesActivityMain.vue')},
-            {path: 'dashboard', component: () => import('pages/dashboard/orderSalesMain.vue')},
-            {path: 'company-info', component: () => import('pages/company/CompanyInfoMain.vue')},
-            {path: 'company-contact', component: () => import('pages/company/ContactMain.vue')},
             {path: 'autocomplete', component: () => import('pages/test/Autocomplete.vue')},
             {path: 'selectbox', component: () => import('pages/test/SelectBox.vue')},
             {path: 'combobox', component: () => import('pages/test/Combobox.vue')},
