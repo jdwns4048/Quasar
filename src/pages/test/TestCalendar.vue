@@ -3,39 +3,51 @@
 </template>
 
 <script lang="ts">
-import {onMounted, defineComponent, ref} from 'vue';
+import {onMounted, defineComponent, ref, PropType} from 'vue';
 import Calendar from '@event-calendar/core';
 import TimeGrid from '@event-calendar/time-grid';
 import DayGrid from '@event-calendar/day-grid';
 import List from '@event-calendar/list';
 import Interaction from '@event-calendar/interaction';
 
+type CalendarType = 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay' | 'listWeek';
+type Type = 'month' | 'week';
+const CalendarTypeMap: Record<Type, CalendarType> = {month: 'dayGridMonth', week: 'listWeek'};
+const DEFAULT_FORMAT = 'YYYY-MM-DD HH:mm';
+
 export default defineComponent({
     name: 'TestCalendar',
-    setup() {
+    props:{
+      type: {
+        type: String as PropType<Type>,
+        default: 'month'
+      },
+    },
+    setup(props, context) {
         const container = ref<HTMLElement>();
         const instance = ref<Calendar>();
+
         onMounted(() => {
-          initialize();
+            initialize();
         });
-        function initialize(){
+        function initialize() {
             instance.value = new Calendar({
-              target: container.value,
-              props:{
-                plugins: [TimeGrid, DayGrid, List, Interaction],
-                options:{
-                  view: 'timeGridWeek',
-                  events: [
-                    // { id: '1', title: 'Event 1', start: '2024-10-15T10:00:00' },
-                    // { id: '2', title: 'Event 2', start: '2024-10-16T14:00:00' }
-                  ]
+                target: container.value,
+                props: {
+                    plugins: [TimeGrid, DayGrid, List, Interaction],
+                    options: {
+                        view: typeToCalendarType(props.type)
+                    }
                 }
-              }
-            })
+            });
         }
-        return{
-          container
+        function typeToCalendarType(value: Type): CalendarType {
+            return CalendarTypeMap[value];
         }
+
+        return {
+            container
+        };
     }
 });
 </script>
