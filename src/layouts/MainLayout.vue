@@ -23,7 +23,7 @@
                     <q-icon name="calendar_month" style="font-size: 24px; margin-right: 15px" />
                     <q-item-section> Calendar </q-item-section>
                 </q-item>
-                <q-item clickable @click="changeUrl('/dashboard')">
+                <q-item clickable @click="changeUrl('/map')">
                     <q-icon name="bar_chart" style="font-size: 24px; margin-right: 15px" />
                     <q-item-section> 지도 </q-item-section>
                 </q-item>

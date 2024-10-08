@@ -6,7 +6,7 @@
                 <div>Calendar</div>
             </q-btn>
 
-            <q-btn class="item-button" size="md" color="white" text-color="black" stack @click="changeUrl('/dashboard')">
+            <q-btn class="item-button" size="md" color="white" text-color="black" stack @click="changeUrl('/map')">
                 <q-icon class="button-icon" name="pin_drop" />
                 <div>지도</div>
             </q-btn>

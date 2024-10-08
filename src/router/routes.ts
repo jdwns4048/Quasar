@@ -11,7 +11,9 @@ const routes: RouteRecordRaw[] = [
             {path: 'combobox', component: () => import('pages/test/Combobox.vue')},
             {path: 'inputvalue', component: () => import('pages/test/InputValue.vue')},
             {path: 'validator', component: () => import('pages/test/Validator.vue')},
-            {path: 'location', component: () => import('pages/address/TestLocation.vue')}
+            {path: 'location', component: () => import('pages/address/TestLocation.vue')},
+            { path: 'map', component: () => import('pages/test/MapView.vue') }
+
         ]
     },
 
