@@ -6,26 +6,23 @@
     </q-page>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import {ref} from 'vue';
 import PostcodeDialog from 'src/pages/address/PostcodeDialog.vue';
 import {formatAddress} from 'src/plugin/utils/formatAddress';
 
-export default {
-    name: 'TestLocation',
-    components: {PostcodeDialog},
-    setup() {
-        const isOpened = ref(false);
-        const address = ref('');
+const isOpened = ref(false);
+const address = ref('');
 
-        const getAddress = (data: any) => {
-            address.value = formatAddress(data);
-        };
-
-        return {isOpened, address, getAddress};
-    }
+/**
+ * 카카오 우편번호 서비스 결과 값을 보기 좋은 형태로  변환.
+ * @param data
+ */
+const getAddress = (data: any) => {
+    address.value = formatAddress(data);
 };
 </script>
+
 <style>
 .textArea {
     margin-top: 20px;
