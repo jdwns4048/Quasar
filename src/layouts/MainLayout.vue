@@ -19,7 +19,7 @@
                     <q-icon name="home" style="font-size: 24px; margin-right: 15px" />
                     <q-item-section> Home </q-item-section>
                 </q-item>
-                <q-item clickable @click="changeUrl('/sales-activity')">
+                <q-item clickable @click="changeUrl('/calendar')">
                     <q-icon name="calendar_month" style="font-size: 24px; margin-right: 15px" />
                     <q-item-section> Calendar </q-item-section>
                 </q-item>
