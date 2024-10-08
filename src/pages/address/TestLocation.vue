@@ -10,6 +10,7 @@
 import {ref} from 'vue';
 import PostcodeDialog from 'src/pages/address/PostcodeDialog.vue';
 import {formatAddress} from 'src/plugin/utils/formatAddress';
+import {Address} from 'src/defines/address';
 
 const isOpened = ref(false);
 const address = ref('');
@@ -18,7 +19,7 @@ const address = ref('');
  * 카카오 우편번호 서비스 결과 값을 보기 좋은 형태로  변환.
  * @param data
  */
-const getAddress = (data: any) => {
+const getAddress = (data: Address) => {
     address.value = formatAddress(data);
 };
 </script>

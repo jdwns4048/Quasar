@@ -15,6 +15,7 @@
 
 <script setup lang="ts">
 import {ref, onMounted, watch, nextTick} from 'vue';
+import {Address} from 'src/defines/address';
 
 const props = defineProps({
     modelValue: Boolean,
@@ -50,7 +51,7 @@ watch(isOpened, newVal => {
  */
 const embedPostcode = () => {
     new (window as any).daum.Postcode({
-        onComplete: (data: any) => {
+        onComplete: (data: Address) => {
             emit('onComplete', data); // 콜백으로 처리
             isOpened.value = false; // 주소 선택 후 다이얼로그 닫기
         },
