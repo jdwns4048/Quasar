@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <div class="column items-center justify-evenly q-gutter-lg">
+        <div class="column items-center justify-center q-gutter-lg">
             <q-btn class="item-button" size="md" color="white" text-color="black" stack @click="changeUrl('/sales-activity')">
                 <q-icon class="button-icon" name="calendar_month" />
                 <div>Calendar</div>

@@ -18,7 +18,7 @@ import {ref, onMounted, watch, nextTick} from 'vue';
 
 const props = defineProps({
     modelValue: Boolean,
-    onComplete: Function // 사용자가 데이터를 처리할 수 있도록 콜백을 전달받음
+    onComplete: Function
 });
 
 const emit = defineEmits(['update:modelValue', 'onComplete']);
