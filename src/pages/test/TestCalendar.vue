@@ -11,7 +11,15 @@
                     </q-card-section>
                     <q-card-section class="q-pt-none col-7 calendar-main" round>
                         <q-list>
-                            <q-item v-for="item in sampleList" :key="item.key">{{ item.label }} </q-item></q-list
+                            <q-item v-for="item in sampleList" :key="item.key">
+                                <q-item-section avatar>
+                                    <q-icon name="check" />
+                                    <!-- 아이콘을 여기 추가 -->
+                                </q-item-section>
+                                <q-item-section>
+                                    {{ item.label }}
+                                </q-item-section>
+                            </q-item></q-list
                         >
                     </q-card-section>
 
@@ -78,9 +86,9 @@ export default defineComponent({
         const instance = ref<Calendar>();
         const isOpened = ref(false);
         const sampleList = [
-            {key: 1, label: '일정 1 아침에 일어나서 알람듣고 끄기'},
-            {key: 2, label: 'item 2'},
-            {key: 3, label: 'item 3'}
+            {key: 1, label: 'quasar layout 확인하기'},
+            {key: 2, label: '달력 상세페이지 만들기'},
+            {key: 3, label: '편집페이지 사용 여부 확인'}
         ];
 
         onMounted(() => {
