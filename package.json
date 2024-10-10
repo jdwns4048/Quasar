@@ -19,6 +19,7 @@
     "@event-calendar/list": "^3.4.0",
     "@event-calendar/resource-time-grid": "^3.4.0",
     "@event-calendar/time-grid": "^3.4.0",
+    "dayjs": "^1.11.11",
     "@quasar/extras": "^1.16.4",
     "crypto-js": "^4.2.0",
     "quasar": "^2.16.0",

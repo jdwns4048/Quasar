@@ -1,46 +1,20 @@
 <template>
-    <div id="calendar" ref="container"></div>
+    <div id="calendar" ref="container" @mousedown="onMouseDown" @click="testMouse"></div>
     <div class="row justify-center">
         <q-btn @click="isOpened = true">상세페이지 팝업</q-btn>
-        <q-dialog v-model="isOpened" persistent>
-            <q-card class="dialog-card row">
-                <q-btn class="arrow" icon="arrow_left"></q-btn>
-                <q-card class="column card-main">
-                    <q-card-section class="col-3 calendar-header">
-                        <div class="text-h4">2020.10.10</div>
-                    </q-card-section>
-                    <q-card-section class="q-pt-none col-7 calendar-main" round>
-                        <q-list>
-                            <q-item v-for="item in sampleList" :key="item.key">
-                                <q-item-section avatar>
-                                    <q-icon name="check" />
-                                    <!-- 아이콘을 여기 추가 -->
-                                </q-item-section>
-                                <q-item-section>
-                                    {{ item.label }}
-                                </q-item-section>
-                            </q-item></q-list
-                        >
-                    </q-card-section>
-
-                    <q-card-actions class="col-2 calendar-footer" align="evenly">
-                        <q-btn class="button" color="primary" label="편집" />
-                        <q-btn class="button" color="primary" label="닫기" v-close-popup />
-                    </q-card-actions>
-                </q-card>
-                <q-btn class="arrow" icon="arrow_right"></q-btn>
-            </q-card>
-        </q-dialog>
+        <CalendarDetailPopup :isOpened="isOpened"></CalendarDetailPopup>
     </div>
 </template>
 
 <script lang="ts">
-import {onMounted, defineComponent, ref, PropType} from 'vue';
+import {onMounted, defineComponent, ref, PropType, watch} from 'vue';
 import Calendar from '@event-calendar/core';
 import TimeGrid from '@event-calendar/time-grid';
 import DayGrid from '@event-calendar/day-grid';
 import List from '@event-calendar/list';
 import Interaction from '@event-calendar/interaction';
+import {dateToStr} from '../../plugin/utils/format/date';
+import CalendarDetailPopup from 'pages/test/popup/CalendarDetailPopup.vue';
 
 type CalendarType = 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay' | 'listWeek';
 type Type = 'month' | 'week';
@@ -64,18 +38,46 @@ export type CalendarView = {
     title: string;
     type: CalendarType;
 };
+export type CalendarEventInfo = {
+    el: HTMLElement;
+    event: CalendarEvent;
+    jsEvent: PointerEvent;
+    view: CalendarView;
+};
+
+export type CalendarDatesSet = {
+    end: Date;
+    endStr: string; //iso8601
+    start: Date;
+    startStr: string; //iso8601
+    view: CalendarView;
+};
 
 type CalendarEventContent = {
     event: CalendarEvent;
     timeText: string;
     view: CalendarView;
 };
+
+type CalendarMoreLink = {
+    num: number;
+    text: string;
+};
+
 const CalendarTypeMap: Record<Type, CalendarType> = {month: 'dayGridMonth', week: 'listWeek'};
 const DEFAULT_FORMAT = 'YYYY-MM-DD HH:mm';
 
 export default defineComponent({
     name: 'TestCalendar',
+    components:{
+      CalendarDetailPopup
+    },
     props: {
+        modelValue: {
+            type: String,
+            // default: () => global.format.dateToStr(new Date(), DEFAULT_FORMAT)
+            default: () => dateToStr(new Date(), DEFAULT_FORMAT)
+        },
         type: {
             type: String as PropType<Type>,
             default: 'month'
@@ -85,12 +87,6 @@ export default defineComponent({
         const container = ref<HTMLElement>();
         const instance = ref<Calendar>();
         const isOpened = ref(false);
-        const sampleList = [
-            {key: 1, label: 'quasar layout 확인하기'},
-            {key: 2, label: '달력 상세페이지 만들기'},
-            {key: 3, label: '편집페이지 사용 여부 확인'}
-        ];
-
         onMounted(() => {
             initialize();
         });
@@ -98,46 +94,111 @@ export default defineComponent({
             instance.value = new Calendar({
                 target: container.value,
                 props: {
-                    plugins: [TimeGrid, DayGrid, List, Interaction],
+                    plugins: [TimeGrid, DayGrid, List, Interaction], //TODO 캘린더 기능 확장,
+                    events: [
+                      //TODO 캘린더에 표시될 이벤트 데이터
+                        {
+                            title: 'Meeting',
+                            start: '2024-10-10T10:00:00',
+                            end: '2024-10-10T12:00:00'
+                        },
+                        {
+                            title: 'Lunch',
+                            start: '2024-10-11T12:00:00',
+                            end: '2024-10-11T13:00:00'
+                        }
+                    ],
                     options: {
                         view: typeToCalendarType(props.type),
-                        headerToolbar: {
-                            start: 'prev,today,next',
-                            center: 'title',
-                            end: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-                        },
-                        buttonText: {
-                            dayGridMonth: 'Month',
-                            timeGridWeek: 'Week',
-                            timeGridDay: 'Day',
-                            listWeek: 'List',
-                            today: 'Today'
-                        },
+                        // headerToolbar: {
+                        //     start: 'prev,today,next',
+                        //     center: 'title',
+                        //     end: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                        // },
+                        // buttonText: {
+                        //     dayGridMonth: 'Month',
+                        //     timeGridWeek: 'Week',
+                        //     timeGridDay: 'Day',
+                        //     listWeek: 'List', // TODO 주간목록 뷰
+                        //     today: 'Today'
+                        // },
                         // events: eventItems.value
                         // date: model.value,
-                        dayMaxEvents: true,
-                        nowIndicator: true,
-                        selectable: false,
+                        dayMaxEvents: false, // 하루에 표시할 최대 이벤트 수를 설정, 초과시 '더보기' 표시
+                        nowIndicator: true, // 현재 시간을 나타내는 표시선 여부
+                        selectable: false, //날짜, 시간범위 선택 여부
                         eventStartEditable: false, // 드래그 가능 여부
                         eventDurationEditable: false, // 크기 조정 여부
                         eventContent(info: CalendarEventContent) {
+                            //TODO 이벤트 렌더링 커스터마이징
+                            console.log('eventContent-info => ', info);
                             // const item = info.event;
                             // const instance = slotToComponent(context.slots.default(item));
                             // return {domNodes: [instance.el]};
+                        },
+                        moreLinkContent(item: CalendarMoreLink) {
+                            //TODO 이벤트 렌더링 커스터마이징
+                            console.log('moreLinkContent-item', item);
+                            // const instance = slotToComponent(context.slots.more({item}));
+                            // return {domNodes: [instance.el]};
+                        },
+                        dateClick(info: CalendarEventInfo) {
+                            console.log('dateClick-info => ', info); // TODO 해당 날짜 클릭시 상세활동
+                            context.emit('date-click', info.event);
+                        },
+                        eventClick(info: CalendarEventInfo) {
+                            console.log('eventClick-info => ', info); // TODO 해당 '활동' 클릭시 상세화면
+                            context.emit('event-click', info.event);
+                        },
+                        datesSet(datesSet: CalendarDatesSet) {
+                            // TODO 달력날짜 설정될때마다, model 및 상태 업데이트
+                            // model.value = dateToStr(datesSet.view.currentStart, DEFAULT_FORMAT);
+                            console.log('datesSet => ', datesSet);
+                            context.emit('update:type', calendarTypeToType(datesSet.view.type));
+                            context.emit('update:range', [datesSet.startStr, datesSet.endStr]);
+                        },
+                        noEventsContent(): string {
+                            // 해당 기간에 등록된 일정이 없습니다.
+                            // return i18n.t('COM_MSG_NO_EVENTS');
+                            return '해당 기간에 등록된 활동이 없습니다.';
                         }
                     }
                 }
             });
-            instance.value.refetchEvents();
+          instance.value.refetchEvents();
         }
         function typeToCalendarType(value: Type): CalendarType {
             return CalendarTypeMap[value];
         }
-
+        //TODO Test
+        function calendarTypeToType(value: CalendarType): Type {
+            // @ts-ignore
+            return Object.entries(CalendarTypeMap).find(array => array[1] === value)[0] as Type;
+        }
+        function onMouseDown(event: MouseEvent) {
+            console.log('onMouseDown =>', event);
+            const element = (event.target as HTMLElement).closest('.ec-day-foot .more');
+            if (element) {
+                const {date} = instance.value.dateFromPoint(event.clientX, event.clientY);
+                context.emit('more', dateToStr(date, 'YYYY-MM-DD HH:mm'));
+                event.preventDefault();
+                event.stopImmediatePropagation();
+            }
+        }
+        //TODO 테스트 Methods
+        function testMouse(event: MouseEvent) {
+            console.log('click =>', event);
+            // const {date} = instance.value.dateFromPoint(event.clientX, event.clientY);
+            // context.emit('add', dateToStr(date, DEFAULT_FORMAT));
+        }
+        watch(isOpened,(value)=>{
+          console.log('isOpened', value);
+        },{immediate:true});
         return {
             container,
             isOpened,
-            sampleList
+            onMouseDown,
+            testMouse,
         };
     }
 });
@@ -146,47 +207,5 @@ export default defineComponent({
 <style scoped>
 #calendar {
     padding: 16px;
-}
-
-.dialog-card {
-    width: 100%;
-    height: 100%;
-    justify-content: space-evenly;
-    align-items: center;
-    background-color: darkgray;
-}
-
-.card-main {
-    height: 100%;
-    width: 70%;
-    background-color: darkgray;
-}
-
-.calendar-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #1d1d1d;
-    background-color: white;
-}
-
-.calendar-main {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    background-color: bisque;
-    width: 100%;
-}
-
-.calendar-footer {
-    background-color: white;
-}
-
-.arrow {
-    background-color: white;
-}
-
-.button {
-    width: 20%;
 }
 </style>
