@@ -34,12 +34,12 @@ function initMap() {
     });
 
     /**
-     * 좌표 값에 해당하는 주소 정보를 요청한다.
+     * 지도에 위치 클릭 시 해당 좌표 값의 주소 정보를 요청한다.
      */
     kakao.maps.event.addListener(map.value, 'click', function (position) {
         if (geocoder.value) {
             const coords = position.latLng;
-            geocoder.value.coord2Address(coords.getLng(), coords.getLat(), searchDetailAddrFromCoords);
+            geocoder.value.coord2Address(coords.getLng(), coords.getLat(), detailAddrFromCoords);
             displayMarker(coords);
         }
     });
@@ -75,7 +75,7 @@ function displayPlaces(places) {
  * 좌표로 상세 주소 정보를 centerAddr 위치에 보여즘
  *
  */
-const searchDetailAddrFromCoords = function (result, status) {
+const detailAddrFromCoords = function (result, status) {
     if (status === kakao.maps.services.Status.OK) {
         centerAddr.value = result[0].address.address_name;
     }
