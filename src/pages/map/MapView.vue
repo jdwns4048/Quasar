@@ -52,7 +52,6 @@ function initMap() {
 function displayMarker(point) {
     if (marker.value) {
         marker.value.setPosition(point);
-        map.value?.setCenter(point);
     }
 }
 
@@ -64,8 +63,9 @@ function displayPlaces(places) {
     if (geocoder.value) {
         geocoder.value.addressSearch(places, function (result, status) {
             if (status === kakao.maps.services.Status.OK) {
-                const coords = new kakao.maps.LatLng(Number(result[0].y), Number(result[0].x));
-                displayMarker(coords);
+                const latlng = new kakao.maps.LatLng(Number(result[0].y), Number(result[0].x));
+                displayMarker(latlng);
+                map.value?.setCenter(latlng);
             }
         });
     }
