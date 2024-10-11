@@ -1,8 +1,8 @@
 <template>
     <div ref="calendarRef" v-touch-swipe="onSwipeCalendar" @mousedown="onMouseDown" style="padding: 16px"></div>
     <div class="row justify-center">
-        <CalendarDetail ref="detailPage"></CalendarDetail>
-        <CalendarEdit ref="editPopup"></CalendarEdit>
+        <!--        <CalendarDetail ref="detailPage"></CalendarDetail>-->
+        <!--        <CalendarEdit ref="editPopup"></CalendarEdit>-->
     </div>
 </template>
 
@@ -16,6 +16,7 @@ import Interaction from '@event-calendar/interaction';
 import {dateToStr} from 'src/plugin/utils/format/date';
 import CalendarDetail from 'pages/calendar/CalendarDetail.vue';
 import CalendarEdit from 'pages/calendar/CalendarEdit.vue';
+import {useRouter} from 'vue-router';
 
 type CalendarType = 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay' | 'listWeek';
 type Type = 'month' | 'week';
@@ -91,6 +92,7 @@ export default defineComponent({
         const instance = ref<Calendar>();
         const isSwipeCalendar = ref(false);
         const info = ref();
+        const router = useRouter();
         onMounted(() => {
             initialize();
         });
@@ -135,14 +137,17 @@ export default defineComponent({
                             //더보기 링크 커스터마이징
                         },
                         dateClick(info: CalendarEventInfo) {
-                            detailPage.value.open(info);
+                            router.push('/calendarDetail');
+                            console.log(info);
                         },
                         eventClick(info: CalendarEventInfo) {
-                            editPopup.value.open(info);
+                            router.push('/calendarDetail');
+                            console.log(info);
+                            // editPopup.value.open(info);
                         },
                         datesSet(datesSet: CalendarDatesSet) {
-                          // 여기에 새로고침하면 무한대로 하게됨
-                          console.log('datesSet : ', datesSet);
+                            // 여기에 새로고침하면 무한대로 하게됨
+                            console.log('datesSet : ', datesSet);
                         },
                         noEventsContent(): string {
                             return '해당 기간에 등록된 활동이 없습니다.';
@@ -161,12 +166,10 @@ export default defineComponent({
                 event.stopImmediatePropagation();
             }
         }
-        // function onSwipeCalendar(event){
-        //   console.log('evemt', event);
-        // }
+
         function onSwipeCalendar(event) {
-          const direction = event.direction;
-          //TODO 'direction' up-down 이벤트
+            const direction = event.direction;
+            //TODO 'direction' up-down 이벤트
             if (direction === 'up') {
                 isSwipeCalendar.value = true;
             } else if (direction === 'down') {
@@ -178,13 +181,13 @@ export default defineComponent({
             }
         }
         return {
-          info,
+            info,
             calendarRef,
             detailPage,
             editPopup,
             eventItems,
             onMouseDown,
-          onSwipeCalendar
+            onSwipeCalendar
         };
     }
 });
