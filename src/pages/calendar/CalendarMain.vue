@@ -1,8 +1,8 @@
 <template>
-    <div ref="calendarRef" v-touch-swipe="onSwipeCalendar" @mousedown="onMouseDown" style="padding: 16px"></div>
+    <div ref="calendarRef" v-touch-swipe.mouse="onSwipeCalendar" style="padding: 16px"></div>
     <div class="row justify-center">
         <!--        <CalendarDetail ref="detailPage"></CalendarDetail>-->
-        <!--        <CalendarEdit ref="editPopup"></CalendarEdit>-->
+        <CalendarEdit ref="editPopup"></CalendarEdit>
     </div>
 </template>
 
@@ -13,13 +13,11 @@ import TimeGrid from '@event-calendar/time-grid';
 import DayGrid from '@event-calendar/day-grid';
 import List from '@event-calendar/list';
 import Interaction from '@event-calendar/interaction';
-import {dateToStr} from 'src/plugin/utils/format/date';
 import CalendarDetail from 'pages/calendar/CalendarDetail.vue';
 import CalendarEdit from 'pages/calendar/CalendarEdit.vue';
 import {useRouter} from 'vue-router';
 
 type CalendarType = 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay' | 'listWeek';
-type Type = 'month' | 'week';
 export type CalendarEvent<T extends Record<string, any> = Record<string, any>> = {
     id: string;
     start: string; //ISO8601
@@ -66,32 +64,17 @@ export type CalendarDatesSet = {
     view: CalendarView;
 };
 
-const DEFAULT_FORMAT = 'YYYY-MM-DD HH:mm';
-
 export default defineComponent({
     name: 'CalendarMain',
     components: {
         CalendarDetail,
         CalendarEdit
     },
-    props: {
-        modelValue: {
-            type: String,
-            // default: () => global.format.dateToStr(new Date(), DEFAULT_FORMAT)
-            default: () => dateToStr(new Date(), DEFAULT_FORMAT)
-        },
-        type: {
-            type: String as PropType<Type>,
-            default: 'month'
-        }
-    },
     setup(props, context) {
         const calendarRef = ref<HTMLElement>();
         const detailPage = ref();
         const editPopup = ref();
         const instance = ref<Calendar>();
-        const isSwipeCalendar = ref(false);
-        const info = ref();
         const router = useRouter();
         onMounted(() => {
             initialize();
@@ -101,13 +84,43 @@ export default defineComponent({
                 id: 'SP0000093',
                 start: '2024-10-10 10:00:30',
                 end: '2024-10-10 12:00:30',
-                title: 'Meeting1'
+                title: 'Meeting'
             },
             {
                 id: 'SP0000094',
                 start: '2024-10-10 13:00:30',
                 end: '2024-10-17 15:00:30',
-                title: 'Meeting3'
+                title: 'work1'
+            },
+            {
+                id: 'SP0000094',
+                start: '2024-10-10 13:00:30',
+                end: '2024-10-17 15:00:30',
+                title: 'work2'
+            },
+            {
+                id: 'SP0000094',
+                start: '2024-10-10 13:00:30',
+                end: '2024-10-17 15:00:30',
+                title: 'work3'
+            },
+            {
+                id: 'SA0000083',
+                start: '2024-10-11T12:00:00',
+                end: '2024-10-11T13:00:00',
+                title: 'Lunch'
+            },
+            {
+                id: 'SA0000083',
+                start: '2024-10-11T12:00:00',
+                end: '2024-10-11T13:00:00',
+                title: 'Lunch'
+            },
+            {
+                id: 'SA0000083',
+                start: '2024-10-11T12:00:00',
+                end: '2024-10-11T13:00:00',
+                title: 'Lunch'
             },
             {
                 id: 'SA0000083',
@@ -123,32 +136,46 @@ export default defineComponent({
                     plugins: [TimeGrid, DayGrid, List, Interaction],
                     options: {
                         view: 'dayGridMonth',
+                        headerToolbar: {
+                            start: '',
+                            center: 'title',
+                            end: ''
+                        },
                         events: eventItems.value,
-                        // date: model.value,
-                        dayMaxEvents: isSwipeCalendar.value,
-                        nowIndicator: true, // 현재 시간을 나타내는 표시선 여부
-                        selectable: false, //날짜, 시간범위 선택 여부
-                        eventStartEditable: false, // 드래그 가능 여부
-                        eventDurationEditable: false, // 크기 조정 여부
+                        //TODO `dayMaxEvents` 숫자타입이 안됨
+                        dayMaxEvents: true,
+                        nowIndicator: true,
+                        selectable: false,
+                        eventStartEditable: false,
+                        eventDurationEditable: false,
+                        eventDisplay(info: CalendarEvent) {
+                          //TODO Test
+                            console.log('eventDisplay =>', info);
+                        },
                         eventContent(info: CalendarEventContent) {
-                            //이벤트 렌더링 커스터마이징
+                            //스케쥴 커스터마이징
+                            const {event} = info;
+                            const el = document.createElement('div');
+                            el.textContent = event.title;
+                            // el.style.backgroundColor = event.backgroundColor || '#FF5733'; // 기본 배경색
+                            // el.style.color = event.textColor || '#FFFFFF';
+                            return {domNodes: [el]};
                         },
                         moreLinkContent(item: CalendarMoreLink) {
-                            //더보기 링크 커스터마이징
+                            const contentEl = document.createElement('span');
+                            contentEl.innerHTML = `+ ${item.num}개의 추가 일정`;
+                            contentEl.style.color = '#007BFF'; // 링크 색상 설정 (파란색)
+                            contentEl.style.cursor = 'pointer'; // 클릭할 수 있는 커서
+                            return {domNodes: [contentEl]};
                         },
                         dateClick(info: CalendarEventInfo) {
                             router.push('/calendarDetail');
-                            console.log(info);
+                            // console.log(info);
                         },
                         eventClick(info: CalendarEventInfo) {
-                            router.push('/calendarDetail');
-                            console.log(info);
-                            // editPopup.value.open(info);
+                            editPopup.value.open(info);
                         },
-                        datesSet(datesSet: CalendarDatesSet) {
-                            // 여기에 새로고침하면 무한대로 하게됨
-                            console.log('datesSet : ', datesSet);
-                        },
+                        datesSet(datesSet: CalendarDatesSet) {},
                         noEventsContent(): string {
                             return '해당 기간에 등록된 활동이 없습니다.';
                         }
@@ -157,38 +184,30 @@ export default defineComponent({
             });
             instance.value.refetchEvents();
         }
-        function onMouseDown(event: MouseEvent) {
-            const element = (event.target as HTMLElement).closest('.ec-day-foot .more');
-            if (element) {
-                const {date} = instance.value.dateFromPoint(event.clientX, event.clientY);
-                context.emit('more', dateToStr(date, 'YYYY-MM-DD HH:mm'));
-                event.preventDefault();
-                event.stopImmediatePropagation();
-            }
-        }
-
         function onSwipeCalendar(event) {
             const direction = event.direction;
-            //TODO 'direction' up-down 이벤트
-            if (direction === 'up') {
-                isSwipeCalendar.value = true;
-            } else if (direction === 'down') {
-                isSwipeCalendar.value = false;
-            } else if (direction === 'left') {
+            if (direction === 'left') {
                 instance.value.next();
             } else if (direction === 'right') {
                 instance.value.prev();
             }
         }
         return {
-            info,
             calendarRef,
             detailPage,
             editPopup,
             eventItems,
-            onMouseDown,
             onSwipeCalendar
         };
     }
 });
 </script>
+<style scoped>
+:deep(.ec-title) {
+    font-size: 20px;
+    font-weight: bold;
+}
+:deep(.ec-event-title) {
+    font-size: 10px;
+}
+</style>
