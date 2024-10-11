@@ -1,15 +1,28 @@
 <template>
-  <q-dialog>
-    <div>
+    <div v-if="isVisible" style="background-color: blue">
       <h6>Edit</h6>
     </div>
-  </q-dialog>
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
+import {defineComponent, ref} from 'vue';
 export default defineComponent({
   name:'CalendarEdit',
+  setup(){
+    const isVisible = ref(false);
+    function open(info){
+      console.log('Opening edit popup => ', info);
+      isVisible.value = true;
+    }
+    function close(){
+      isVisible.value = false;
+    }
+    return{
+      isVisible,
+      open,
+      close
+    }
+  }
 })
 </script>
 

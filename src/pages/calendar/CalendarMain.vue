@@ -1,5 +1,5 @@
 <template>
-    <div ref="calendarRef" @mousedown="onMouseDown" style="padding: 16px"></div>
+    <div ref="calendarRef" v-touch-swipe="onSwipeCalendar" @mousedown="onMouseDown" style="padding: 16px"></div>
     <div class="row justify-center">
         <CalendarDetail ref="detailPage"></CalendarDetail>
         <CalendarEdit ref="editPopup"></CalendarEdit>
@@ -90,6 +90,7 @@ export default defineComponent({
         const editPopup = ref();
         const instance = ref<Calendar>();
         const isSwipeCalendar = ref(false);
+        const info = ref();
         onMounted(() => {
             initialize();
         });
@@ -123,26 +124,25 @@ export default defineComponent({
                         events: eventItems.value,
                         // date: model.value,
                         dayMaxEvents: isSwipeCalendar.value,
-                        nowIndicator: false, // 현재 시간을 나타내는 표시선 여부
+                        nowIndicator: true, // 현재 시간을 나타내는 표시선 여부
                         selectable: false, //날짜, 시간범위 선택 여부
                         eventStartEditable: false, // 드래그 가능 여부
                         eventDurationEditable: false, // 크기 조정 여부
                         eventContent(info: CalendarEventContent) {
-                            //TODO 이벤트 렌더링 커스터마이징
+                            //이벤트 렌더링 커스터마이징
                         },
                         moreLinkContent(item: CalendarMoreLink) {
-                            //TODO 이벤트 렌더링 커스터마이징
+                            //더보기 링크 커스터마이징
                         },
                         dateClick(info: CalendarEventInfo) {
-                            // TODO 해당 날짜 클릭시 detailPage.open()
-                            detailPage.value.open();
+                            detailPage.value.open(info);
                         },
                         eventClick(info: CalendarEventInfo) {
-                            // TODO 해당 '활동' 클릭시 editPopup.open();
-                            editPopup.value.open();
+                            editPopup.value.open(info);
                         },
                         datesSet(datesSet: CalendarDatesSet) {
-                            // TODO 기본 12시, 24시 상태 업데이트하는 로직
+                          // 여기에 새로고침하면 무한대로 하게됨
+                          console.log('datesSet : ', datesSet);
                         },
                         noEventsContent(): string {
                             return '해당 기간에 등록된 활동이 없습니다.';
@@ -161,20 +161,30 @@ export default defineComponent({
                 event.stopImmediatePropagation();
             }
         }
-        function onSwipeCalendar() {
-            //TODO 모바일 웹앱기준으로 swipe 이벤트 사용
-            //위로 swipe 하면 isSwipeCalendar.value = true
-            //아래로 swipe 하면 isSwipeCalendar.value = false
-            //좌로 swipe 하면 last month
-            //우로 swipe 하면 next month
+        // function onSwipeCalendar(event){
+        //   console.log('evemt', event);
+        // }
+        function onSwipeCalendar(event) {
+          const direction = event.direction;
+          //TODO 'direction' up-down 이벤트
+            if (direction === 'up') {
+                isSwipeCalendar.value = true;
+            } else if (direction === 'down') {
+                isSwipeCalendar.value = false;
+            } else if (direction === 'left') {
+                instance.value.next();
+            } else if (direction === 'right') {
+                instance.value.prev();
+            }
         }
         return {
+          info,
             calendarRef,
             detailPage,
             editPopup,
             eventItems,
             onMouseDown,
-            onSwipeCalendar
+          onSwipeCalendar
         };
     }
 });
