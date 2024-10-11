@@ -2,10 +2,10 @@
   <q-layout view="lHh Lpr lFf">
     <q-page-container class="q-gutter-sm">
       <q-page class="q-pa-md">
-        <div id="map" @click="mapClick"></div>
+        <div id="map"></div>
         <q-btn class="q-mt-md" color="primary" label="주소 검색" @click="openPopup"/>
         <PostcodeDialog ref="popup" @apply="getAddress"/>
-        <q-input class="textarea" v-model="centerAddr" label="map data" filled type="textarea"/>
+        <q-input class="textarea" v-model="centerAddr" label="map data" filled type="textarea" readonly/>
       </q-page>
     </q-page-container>
   </q-layout>
@@ -29,6 +29,7 @@ function initMap() {
     level: 5,
   };
   const markerPosition = options.center;
+
   map.value = new kakao.maps.Map(container as HTMLElement, options);
   geocoder.value = new kakao.maps.services.Geocoder();
   marker.value = new kakao.maps.Marker({
@@ -36,6 +37,14 @@ function initMap() {
     position: markerPosition
   });
 
+  /**
+   * 좌표 값에 해당하는 주소 정보를 요청한다.
+   */
+  kakao.maps.event.addListener(map.value, 'click', function (position) {
+    const coords = position.latLng;
+    geocoder.value.coord2Address(coords.getLng(), coords.getLat(), searchDetailAddrFromCoords);
+    displayMarker(coords);
+  });
 }
 
 /**
@@ -54,7 +63,7 @@ function displayMarker(point) {
 }
 
 /**
- * 검색 결과 항목 클릭 시 지도 및 장소 정보 출력
+ * 주소 정보에 해당 좌표값 요청
  * @param places
  * @param callback
  */
@@ -62,18 +71,10 @@ function displayPlaces(places, callback: Function) {
   geocoder.value.addressSearch(places, callback)
 }
 
-
-function mapClick() {
-  if (map.value) {
-    kakao.maps.event.addListener(map.value, 'click', function (position) {
-      const coords = position.latLng;
-      displayMarker(coords);
-      geocoder.value.coord2Address(coords.getLng(), coords.getLat(), searchDetailAddrFromCoords);
-    });
-  }
-
-}
-
+/**
+ * 좌표로 상세 주소 정보를 centerAddr 위치에 보여즘
+ *
+ */
 const searchDetailAddrFromCoords = function (result, status) {
   if (status === kakao.maps.services.Status.OK) {
     centerAddr.value = result[0].address.address_name;
