@@ -13,7 +13,7 @@ import {formatAddress} from 'src/plugin/utils/formatAddress';
 import {Address} from 'src/defines/address';
 
 const address = ref('');
-const popup = ref(PostcodeDialog);
+const popup = ref<typeof PostcodeDialog | null>(null);
 
 /**
  * 카카오 우편번호 서비스 결과 값을 보기 좋은 형태로 변환.
@@ -24,7 +24,9 @@ const getAddress = (data: Address) => {
 };
 
 function openPopup() {
-    popup.value.open();
+    if (popup.value) {
+        popup.value.open();
+    }
 }
 </script>
 
