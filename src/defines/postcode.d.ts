@@ -1,4 +1,4 @@
-export declare type Address = {
+export declare type Postcode = {
     postcode: string;
     postcode1: string;
     postcode2: string;

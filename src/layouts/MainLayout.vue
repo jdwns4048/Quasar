@@ -27,7 +27,7 @@
                     <q-icon name="bar_chart" style="font-size: 24px; margin-right: 15px" />
                     <q-item-section> 지도 </q-item-section>
                 </q-item>
-                <q-item clickable @click="changeUrl('/location')">
+                <q-item clickable @click="changeUrl('/postcode')">
                     <q-icon name="emoji_transportation" style="font-size: 24px; margin-right: 15px" />
                     <q-item-section> 주소 검색 </q-item-section>
                 </q-item>

@@ -2,7 +2,7 @@
     <q-page class="q-pa-md">
         <div id="map"></div>
         <q-btn class="q-mt-md" color="primary" label="주소 검색" @click="openPopup" />
-        <PostcodeDialog ref="popup" @apply="getAddress" />
+        <PostcodeDialog ref="popup" @apply="formatData" />
         <q-input class="textarea" v-model="centerAddr" label="map data" filled type="textarea" readonly />
     </q-page>
 </template>
@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import {onMounted, ref} from 'vue';
 import PostcodeDialog from 'pages/address/PostcodeDialog.vue';
-import {Address} from 'src/defines/address';
+import {Postcode} from 'src/defines/postcode';
 
 const map = ref<kakao.maps.Map | null>(null);
 const marker = ref<kakao.maps.Marker | null>(null);
@@ -59,7 +59,7 @@ function displayMarker(point) {
  * 주소 정보에 해당 좌표값 요청
  * @param places
  */
-function displayPlaces(places) {
+function displayPlace(places) {
     if (geocoder.value) {
         geocoder.value.addressSearch(places, function (result, status) {
             if (status === kakao.maps.services.Status.OK) {
@@ -84,9 +84,9 @@ const detailAddrFromCoords = function (result, status) {
  * 카카오 우편번호 서비스 결과 값을 보기 좋은 형태로  변환.
  * @param data
  */
-const getAddress = (data: Address) => {
+const formatData = (data: Postcode) => {
     centerAddr.value = data.address;
-    displayPlaces(centerAddr.value);
+    displayPlace(centerAddr.value);
 };
 
 function openPopup() {

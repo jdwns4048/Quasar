@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import {ref, onMounted, watch, nextTick} from 'vue';
-import {Address} from 'src/defines/address';
+import {Postcode} from 'src/defines/postcode';
 
 const emit = defineEmits(['apply']);
 
@@ -32,7 +32,7 @@ const embedPostcode = () => {
     new (window as any).daum.Postcode({
         width: POSTCODE_WIDTH,
         height: POSTCODE_HEIGHT,
-        onComplete: (data: Address) => {
+        onComplete: (data: Postcode) => {
             emit('apply', data);
             close(); // 주소 선택 후 다이얼로그 닫기
         }
