@@ -19,11 +19,11 @@ const popup = ref<typeof PostcodeDialog | null>(null);
  * 카카오 우편번호 서비스 결과 값을 보기 좋은 형태로 변환.
  * @param data
  */
-const formatData = (data: Postcode) => {
+const formatData = (data: Postcode): void => {
     address.value = formatPostcode(data);
 };
 
-function openPopup() {
+function openPopup(): void {
     if (popup.value) {
         popup.value.open();
     }

@@ -28,7 +28,7 @@ const isPostcodeScriptLoaded = ref(true);
 /**
  * iframe을 통해 다이얼로그(팝업) 표시
  */
-const embedPostcode = () => {
+const embedPostcode = (): void => {
     new (window as any).daum.Postcode({
         width: POSTCODE_WIDTH,
         height: POSTCODE_HEIGHT,
@@ -42,7 +42,7 @@ const embedPostcode = () => {
 /**
  * 카카오 우편번호 서비스 API 스크립트를 로드
  */
-const loadPostcode = () => {
+const loadPostcode = (): void => {
     if (isPostcodeScriptLoaded.value) {
         const script = document.createElement('script');
         script.src = '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
@@ -57,14 +57,20 @@ const loadPostcode = () => {
     }
 };
 
-function open() {
+/**
+ * 팝업을 엽니다.
+ */
+function open(): void {
     isOpened.value = true;
     nextTick(() => {
         embedPostcode();
     });
 }
 
-function close() {
+/**
+ * 팝업을 닫습니다.
+ */
+function close(): void {
     isOpened.value = false;
 }
 
