@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import {onMounted, defineComponent, ref, PropType, watch} from 'vue';
+import {onMounted, defineComponent, ref} from 'vue';
 import Calendar from '@event-calendar/core';
 import TimeGrid from '@event-calendar/time-grid';
 import DayGrid from '@event-calendar/day-grid';
@@ -99,18 +99,6 @@ export default defineComponent({
                 title: 'work2'
             },
             {
-                id: 'SP0000094',
-                start: '2024-10-10 13:00:30',
-                end: '2024-10-17 15:00:30',
-                title: 'work3'
-            },
-            {
-                id: 'SA0000083',
-                start: '2024-10-11T12:00:00',
-                end: '2024-10-11T13:00:00',
-                title: 'Lunch'
-            },
-            {
                 id: 'SA0000083',
                 start: '2024-10-11T12:00:00',
                 end: '2024-10-11T13:00:00',
@@ -130,28 +118,25 @@ export default defineComponent({
             }
         ]);
         function initialize() {
+            //TODO 주말 외에 공휴일 표시하는 법 찾아볼것.
             instance.value = new Calendar({
                 target: calendarRef.value,
                 props: {
                     plugins: [TimeGrid, DayGrid, List, Interaction],
                     options: {
                         view: 'dayGridMonth',
+                        dayHeaderFormat: { weekday: 'short' }, // default
                         headerToolbar: {
                             start: '',
                             center: 'title',
                             end: ''
                         },
                         events: eventItems.value,
-                        //TODO `dayMaxEvents` 숫자타입이 안됨
                         dayMaxEvents: true,
                         nowIndicator: true,
                         selectable: false,
                         eventStartEditable: false,
                         eventDurationEditable: false,
-                        eventDisplay(info: CalendarEvent) {
-                          //TODO Test
-                            console.log('eventDisplay =>', info);
-                        },
                         eventContent(info: CalendarEventContent) {
                             //스케쥴 커스터마이징
                             const {event} = info;
@@ -162,15 +147,17 @@ export default defineComponent({
                             return {domNodes: [el]};
                         },
                         moreLinkContent(item: CalendarMoreLink) {
+                            //더보기 설정
                             const contentEl = document.createElement('span');
                             contentEl.innerHTML = `+ ${item.num}개의 추가 일정`;
-                            contentEl.style.color = '#007BFF'; // 링크 색상 설정 (파란색)
-                            contentEl.style.cursor = 'pointer'; // 클릭할 수 있는 커서
+                            contentEl.innerHTML = `+ ${item.num}개의 추가 일정`;
+                            contentEl.style.color = '#138535';
+                            contentEl.style.cursor = 'pointer';
                             return {domNodes: [contentEl]};
                         },
+                        //TODO 해당 라우터에 매개변수 info 를 보내야됨
                         dateClick(info: CalendarEventInfo) {
                             router.push('/calendarDetail');
-                            // console.log(info);
                         },
                         eventClick(info: CalendarEventInfo) {
                             editPopup.value.open(info);
@@ -207,7 +194,16 @@ export default defineComponent({
     font-size: 20px;
     font-weight: bold;
 }
-:deep(.ec-event-title) {
-    font-size: 10px;
+:deep(.ec-content .ec-days .ec-day){
+  height: 90px;
+}
+:deep(.ec-content .ec-days .ec-day .ec-day-head){
+  text-align: center;
+}
+:deep(.ec-days .ec-day.ec-sat){
+  color: blue;
+}
+:deep(.ec-days .ec-day.ec-sun){
+  color: red;
 }
 </style>
