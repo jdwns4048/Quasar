@@ -10,7 +10,7 @@
                 <q-icon class="button-icon" name="pin_drop" />
                 <div>지도</div>
             </q-btn>
-            <q-btn class="item-button" size="md" color="white" text-color="black" stack @click="changeUrl('/location')">
+            <q-btn class="item-button" size="md" color="white" text-color="black" stack @click="changeUrl('/postcode')">
                 <q-icon class="button-icon" name="my_location" />
                 <div>주소 검색</div>
             </q-btn>
