@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted, watch, nextTick} from 'vue';
+import {ref, onMounted, nextTick} from 'vue';
 import {Postcode} from 'src/defines/postcode';
 
 const emit = defineEmits(['apply']);
