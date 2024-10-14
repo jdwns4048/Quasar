@@ -1,5 +1,5 @@
 <template>
-    <q-page claoss="q-pa-md">
+    <q-page class="q-pa-md">
         <div class="container">
             <q-card class="dialog-card row">
                 <q-btn class="arrow" icon="arrow_left"></q-btn>
@@ -8,14 +8,12 @@
                         <div class="text-h4">{{ date }}</div>
                     </q-card-section>
                     <q-card-section class="q-pt-none col-7 calendar-main">
-                        <div v-if="events.length === 0">일정이 없습니다.</div>
-                        <div v-else>
-                            <q-list>
-                                <q-item v-for="event in events" :key="event.id">
-                                    <q-item-section> {{ event.title }} </q-item-section>
-                                </q-item>
-                            </q-list>
+                        <div v-if="events.length > 0">
+                            <q-item v-for="event in events" :key="event.id">
+                                <q-item-section>{{ event.title }}</q-item-section>
+                            </q-item>
                         </div>
+                        <div v-else>일정이 없습니다.</div>
                     </q-card-section>
 
                     <q-card-actions class="col-2 calendar-footer" align="evenly">
@@ -30,12 +28,19 @@
 </template>
 <script setup lang="ts">
 import {useRoute, useRouter} from 'vue-router';
-import {onMounted, ref} from 'vue';
+import {ref} from 'vue';
+
+interface Event {
+    id: string;
+    start: string;
+    end: string;
+    title: string;
+}
 
 const route = useRoute();
 const router = useRouter();
-const date = route.query.date;
-const events = ref(JSON.parse((route.query.events as string) || '[]'));
+const date = route.query.date as string;
+const events = ref<Event[]>(JSON.parse((route.query.events as string) || '[]'));
 
 function close() {
     router.back();
