@@ -64,6 +64,15 @@ export type CalendarDatesSet = {
     view: CalendarView;
 };
 
+export type Info = {
+    date: Date; // 클릭된 날짜
+    dateStr: string; // 날짜 문자열
+    allDay: boolean; // 하루 종일 여부
+    resource?: any; // 리소스 객체 (선택적)
+    dayEl: HTMLElement; // 클릭된 전체 일 요소
+    jsEvent: MouseEvent;
+};
+
 export default defineComponent({
     name: 'CalendarMain',
     components: {
@@ -125,7 +134,7 @@ export default defineComponent({
                     plugins: [TimeGrid, DayGrid, List, Interaction],
                     options: {
                         view: 'dayGridMonth',
-                        dayHeaderFormat: { weekday: 'short' }, // default
+                        dayHeaderFormat: {weekday: 'short'}, // default
                         headerToolbar: {
                             start: '',
                             center: 'title',
@@ -156,8 +165,13 @@ export default defineComponent({
                             return {domNodes: [contentEl]};
                         },
                         //TODO 해당 라우터에 매개변수 info 를 보내야됨
-                        dateClick(info: CalendarEventInfo) {
-                            router.push('/calendarDetail');
+                        dateClick(info: Info) {
+                            router.push({
+                                path: '/calendarDetail',
+                                query: {
+                                    dateStr: info.dateStr.slice(0, 10)
+                                }
+                            });
                         },
                         eventClick(info: CalendarEventInfo) {
                             editPopup.value.open(info);
@@ -194,16 +208,16 @@ export default defineComponent({
     font-size: 20px;
     font-weight: bold;
 }
-:deep(.ec-content .ec-days .ec-day){
-  height: 90px;
+:deep(.ec-content .ec-days .ec-day) {
+    height: 90px;
 }
-:deep(.ec-content .ec-days .ec-day .ec-day-head){
-  text-align: center;
+:deep(.ec-content .ec-days .ec-day .ec-day-head) {
+    text-align: center;
 }
-:deep(.ec-days .ec-day.ec-sat){
-  color: blue;
+:deep(.ec-days .ec-day.ec-sat) {
+    color: blue;
 }
-:deep(.ec-days .ec-day.ec-sun){
-  color: red;
+:deep(.ec-days .ec-day.ec-sun) {
+    color: red;
 }
 </style>
