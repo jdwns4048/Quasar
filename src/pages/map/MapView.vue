@@ -110,7 +110,7 @@ const loadMap = (): void => {
     }
     const key = import.meta.env.VITE_KAKAOMAP_KEY;
     const script = document.createElement('script');
-    script.src = '//dapi.kakao.com/v2/maps/sdk.js?appkey=${key}&autoload=false&libraries=services';
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${key}&autoload=false&libraries=services`;
     script.onload = () => kakao.maps.load(initMap);
     document.head.appendChild(script);
 };
