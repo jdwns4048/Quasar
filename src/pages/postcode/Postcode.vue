@@ -23,6 +23,9 @@ const formatData = (data: Postcode): void => {
     address.value = formatPostcode(data);
 };
 
+/**
+ * 팝업을 엽니다.
+ */
 function openPopup(): void {
     if (popup.value) {
         popup.value.open();
