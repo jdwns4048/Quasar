@@ -3,9 +3,7 @@
         <q-header elevated>
             <q-toolbar>
                 <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
-
                 <q-toolbar-title class="text-center full-width" clickable @click="changeUrl('/')"> T-CRM </q-toolbar-title>
-
                 <div><q-icon name="notifications" style="font-size: 24px" /></div>
             </q-toolbar>
         </q-header>
@@ -40,41 +38,30 @@
     </q-layout>
 </template>
 
-<script lang="ts">
-import {defineComponent, ref} from 'vue';
-import EssentialLink, {EssentialLinkProps} from 'components/EssentialLink.vue';
+<script setup lang="ts">
+import {ref} from 'vue';
 import {useRouter} from 'vue-router';
 
-const linksList: EssentialLinkProps[] = [
-    {
-        title: 'Docs',
-        caption: 'quasar.dev',
-        icon: 'school',
-        link: 'https://quasar.dev'
-    }
-];
+const router = useRouter();
+const leftDrawerOpen = ref(false);
 
-export default defineComponent({
-    name: 'MainLayout',
+/**
+ * navigation toggle
+ */
+function toggleLeftDrawer() {
+    leftDrawerOpen.value = !leftDrawerOpen.value;
+}
 
-    components: {
-        EssentialLink
-    },
+/**
+ * URL을 변경하여 다른 페이지로 이동합니다.
+ * @param newUrl
+ */
+function changeUrl(newUrl: string) {
+    router.push(newUrl);
+}
 
-    setup() {
-        const leftDrawerOpen = ref(false);
-        const router = useRouter();
-        function changeUrl(newUrl: string) {
-            router.push(newUrl);
-        }
-        return {
-            linksList,
-            leftDrawerOpen,
-            toggleLeftDrawer() {
-                leftDrawerOpen.value = !leftDrawerOpen.value;
-            },
-            changeUrl
-        };
-    }
+//Component 이름 정의.
+defineOptions({
+    name: 'MainLayout'
 });
 </script>
