@@ -38,6 +38,7 @@ export type CalendarView = {
     title: string;
     type: CalendarType;
 };
+
 type CalendarEventContent = {
     event: CalendarEvent;
     timeText: string;
@@ -164,6 +165,7 @@ export default defineComponent({
                 const startDate = new Date(event.start.slice(0, 10));
                 const endDate = new Date(event.end.slice(0, 10));
                 const targetDate = new Date(date);
+
                 return targetDate >= startDate && targetDate <= endDate;
             });
         }
