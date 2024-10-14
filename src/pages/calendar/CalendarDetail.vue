@@ -5,9 +5,18 @@
                 <q-btn class="arrow" icon="arrow_left"></q-btn>
                 <q-card class="column card-main">
                     <q-card-section class="col-3 calendar-header">
-                        <div class="text-h4">{{ dateStr }}</div>
+                        <div class="text-h4">{{ date }}</div>
                     </q-card-section>
-                    <q-card-section class="q-pt-none col-7 calendar-main"> 일정 리스트 보여질 곳 </q-card-section>
+                    <q-card-section class="q-pt-none col-7 calendar-main">
+                        <div v-if="events.length === 0">일정이 없습니다.</div>
+                        <div v-else>
+                            <q-list>
+                                <q-item v-for="event in events" :key="event.id">
+                                    <q-item-section> {{ event.title }} </q-item-section>
+                                </q-item>
+                            </q-list>
+                        </div>
+                    </q-card-section>
 
                     <q-card-actions class="col-2 calendar-footer" align="evenly">
                         <q-btn class="button" color="primary" label="편집" />
@@ -21,10 +30,12 @@
 </template>
 <script setup lang="ts">
 import {useRoute, useRouter} from 'vue-router';
+import {onMounted, ref} from 'vue';
 
 const route = useRoute();
 const router = useRouter();
-const dateStr = route.query.dateStr;
+const date = route.query.date;
+const events = ref(JSON.parse((route.query.events as string) || '[]'));
 
 function close() {
     router.back();

@@ -166,10 +166,13 @@ export default defineComponent({
                         },
                         //TODO 해당 라우터에 매개변수 info 를 보내야됨
                         dateClick(info: Info) {
+                            const date = info.dateStr.slice(0, 10);
+                            const events = getDateEvents(date);
                             router.push({
                                 path: '/calendarDetail',
                                 query: {
-                                    dateStr: info.dateStr.slice(0, 10)
+                                    date: date,
+                                    events: JSON.stringify(events)
                                 }
                             });
                         },
@@ -185,6 +188,7 @@ export default defineComponent({
             });
             instance.value.refetchEvents();
         }
+
         function onSwipeCalendar(event) {
             const direction = event.direction;
             if (direction === 'left') {
@@ -193,12 +197,23 @@ export default defineComponent({
                 instance.value.prev();
             }
         }
+
+        function getDateEvents(date: string) {
+            return eventItems.value.filter(event => {
+                const startDate = new Date(event.start.slice(0, 10));
+                const endDate = new Date(event.end.slice(0, 10));
+                const targetDate = new Date(date);
+                return targetDate >= startDate && targetDate <= endDate;
+            });
+        }
+
         return {
             calendarRef,
             detailPage,
             editPopup,
             eventItems,
-            onSwipeCalendar
+            onSwipeCalendar,
+            getDateEvents
         };
     }
 });
