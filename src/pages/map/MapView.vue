@@ -104,6 +104,11 @@ function openPopup(): void {
 }
 
 const loadMap = (): void => {
+    if (document.querySelector('script[src*="dapi.kakao.com/v2/maps/sdk.js"]')) {
+        kakao.maps.load(initMap);
+        return;
+    }
+
     const script = document.createElement('script');
     script.src = '//dapi.kakao.com/v2/maps/sdk.js?appkey=5de7bb5646496ded9485a7308b93b729&autoload=false&libraries=services';
     script.onload = () => kakao.maps.load(initMap);
