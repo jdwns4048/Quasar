@@ -15,7 +15,7 @@ import {Postcode} from 'src/defines/postcode';
 const map = ref<kakao.maps.Map | null>(null);
 const marker = ref<kakao.maps.Marker | null>(null);
 const geocoder = ref<kakao.maps.services.Geocoder | null>(null);
-const centerAddr = ref('');
+const centerAddr = ref<string>('');
 const popup = ref<typeof PostcodeDialog | null>(null);
 
 function initMap(): void {
@@ -33,16 +33,19 @@ function initMap(): void {
         position: markerPosition
     });
 
-    /**
-     * 지도에 위치 클릭 시 해당 좌표 값의 주소 정보를 요청한다.
-     */
-    kakao.maps.event.addListener(map.value, 'click', function (position: kakao.maps.event.MouseEvent) {
-        if (geocoder.value) {
-            const coords = position.latLng;
-            geocoder.value.coord2Address(coords.getLng(), coords.getLat(), detailAddrFromCoords);
-            displayMarker(coords);
-        }
-    });
+    kakao.maps.event.addListener(map.value, 'click', onClickMap);
+}
+
+/**
+ * 지도 클릭 시 클릭한 위치의 좌표 정보를 통해 주소를 요청하고 해당 좌표에 마커를 표시한다.
+ * @param point - 클릭한 위치의 좌표
+ */
+function onClickMap(point: kakao.maps.event.MouseEvent) {
+    if (geocoder.value) {
+        const coords = point.latLng;
+        geocoder.value.coord2Address(coords.getLng(), coords.getLat(), detailAddrFromCoords);
+        displayMarker(coords);
+    }
 }
 
 /**
@@ -57,17 +60,24 @@ function displayMarker(point: kakao.maps.LatLng): void {
 
 /**
  * 주소 정보에 해당 좌표값 요청
- * @param places
+ * @param place
  */
-function displayPlace(places: string): void {
+function displayPlace(place: string): void {
     if (geocoder.value) {
-        geocoder.value.addressSearch(places, function (result, status) {
-            if (status === kakao.maps.services.Status.OK) {
-                const latlng = new kakao.maps.LatLng(Number(result[0].y), Number(result[0].x));
-                displayMarker(latlng);
-                map.value?.setCenter(latlng);
-            }
-        });
+        geocoder.value.addressSearch(place, handleSearchResult);
+    }
+}
+
+/**
+ * 주소 검색 결과를 처리하는 콜백 함수
+ * @param result
+ * @param status
+ */
+function handleSearchResult(result: any, status: kakao.maps.services.Status): void {
+    if (status === kakao.maps.services.Status.OK) {
+        const latlng = new kakao.maps.LatLng(Number(result[0].y), Number(result[0].x));
+        displayMarker(latlng);
+        map.value?.setCenter(latlng);
     }
 }
 
@@ -75,11 +85,12 @@ function displayPlace(places: string): void {
  * 좌표로 상세 주소 정보를 centerAddr 위치에 보여즘
  *
  */
-const detailAddrFromCoords = function (result, status: kakao.maps.services.Status): void {
+const detailAddrFromCoords = function (result: any, status: kakao.maps.services.Status): void {
     if (status === kakao.maps.services.Status.OK) {
         centerAddr.value = result[0].address.address_name;
     }
 };
+
 /**
  * 카카오 우편번호 서비스 결과 값을 보기 좋은 형태로  변환.
  * @param data
@@ -89,6 +100,9 @@ const formatData = (data: Postcode): void => {
     displayPlace(centerAddr.value);
 };
 
+/**
+ * 팝업을 엽니다.
+ */
 function openPopup(): void {
     if (popup.value) {
         popup.value.open();
@@ -101,6 +115,7 @@ const loadMap = (): void => {
     script.onload = () => kakao.maps.load(initMap);
     document.head.appendChild(script);
 };
+
 onMounted(() => {
     loadMap();
 });
