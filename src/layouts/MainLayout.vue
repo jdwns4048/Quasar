@@ -24,33 +24,13 @@
                     <q-item-section> Calendar </q-item-section>
                 </q-item>
                 <q-item clickable @click="changeUrl('/map')">
-                    <q-icon name="bar_chart" style="font-size: 24px; margin-right: 15px" />
+                    <q-icon name="pin_drop" style="font-size: 24px; margin-right: 15px" />
                     <q-item-section> 지도 </q-item-section>
                 </q-item>
                 <q-item clickable @click="changeUrl('/postcode')">
-                    <q-icon name="emoji_transportation" style="font-size: 24px; margin-right: 15px" />
+                    <q-icon name="my_location" style="font-size: 24px; margin-right: 15px" />
                     <q-item-section> 주소 검색 </q-item-section>
                 </q-item>
-
-                <!-- TODO 아래의 테스트를 하위 메뉴로 이동시킬것.       -->
-                <!--                <q-item clickable @click="changeUrl('/autocomplete')">-->
-                <!--                    <q-icon name="attachment" style="font-size: 24px; margin-right: 15px" />-->
-                <!--                    <q-item-section> Autocomplete </q-item-section>-->
-                <!--                </q-item>-->
-                <!--                <q-item clickable @click="changeUrl('/selectbox')">-->
-                <!--                    <q-icon name="attachment" style="font-size: 24px; margin-right: 15px" />-->
-                <!--                    <q-item-section> Selectbox </q-item-section>-->
-                <!--                </q-item>-->
-                <!--                <q-item clickable @click="changeUrl('/Combobox')">-->
-                <!--                    <q-icon name="attachment" style="font-size: 24px; margin-right: 15px" />-->
-                <!--                    <q-item-section> Combobox </q-item-section>-->
-                <!--                </q-item>-->
-                <!--                <q-item clickable @click="changeUrl('/InputValue')">-->
-                <!--                    <q-icon name="attachment" style="font-size: 24px; margin-right: 15px" />-->
-                <!--                    <q-item-section> InputValue </q-item-section>-->
-                <!--                </q-item>-->
-                <!--                <br />-->
-                <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
             </q-list>
         </q-drawer>
 
