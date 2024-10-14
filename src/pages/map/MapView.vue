@@ -3,7 +3,7 @@
         <div id="map"></div>
         <q-btn class="q-mt-md" color="primary" label="주소 검색" @click="openPopup" />
         <PostcodeDialog ref="popup" @apply="formatData" />
-        <q-input class="textarea" v-model="centerAddress" label="map data" filled type="textarea" readonly />
+        <q-input class="textarea" v-model="address" label="map data" filled type="textarea" readonly />
     </q-page>
 </template>
 
@@ -15,7 +15,7 @@ import {Postcode} from 'src/defines/postcode';
 const map = ref<kakao.maps.Map | null>(null);
 const marker = ref<kakao.maps.Marker | null>(null);
 const geocoder = ref<kakao.maps.services.Geocoder | null>(null);
-const centerAddress = ref<string>('');
+const address = ref<string>('');
 const popup = ref<typeof PostcodeDialog | null>(null);
 
 function initMap(): void {
@@ -37,8 +37,8 @@ function initMap(): void {
 function onMapClick(point: kakao.maps.event.MouseEvent): void {
     const coords = point.latLng;
     if (geocoder.value) {
-        geocoder.value.coord2Address(coords.getLng(), coords.getLat(), updateCenterAddress);
-        setMaker(coords);
+        geocoder.value.coord2Address(coords.getLng(), coords.getLat(), updateAddress);
+        setMarker(coords);
     }
 }
 
@@ -46,7 +46,7 @@ function onMapClick(point: kakao.maps.event.MouseEvent): void {
  * 선택된 위치로 마커 이동
  * @param point
  */
-function setMaker(point: kakao.maps.LatLng): void {
+function setMarker(point: kakao.maps.LatLng): void {
     if (marker.value) {
         marker.value.setPosition(point);
     }
@@ -70,18 +70,18 @@ function searchAddress(place: string): void {
 function handleSearchResult(result: any, status: kakao.maps.services.Status): void {
     if (status === kakao.maps.services.Status.OK) {
         const latlng = new kakao.maps.LatLng(Number(result[0].y), Number(result[0].x));
-        setMaker(latlng);
+        setMarker(latlng);
         map.value?.setCenter(latlng);
     }
 }
 
 /**
- * 좌표로 상세 주소 정보를 centerAddress 위치에 보여즘
+ * 좌표로 상세 주소 정보를 address 위치에 보여즘
  *
  */
-const updateCenterAddress = function (result: any, status: kakao.maps.services.Status): void {
+const updateAddress = function (result: any, status: kakao.maps.services.Status): void {
     if (status === kakao.maps.services.Status.OK) {
-        centerAddress.value = result[0].address.address_name;
+        address.value = result[0].address.address_name;
     }
 };
 
@@ -90,8 +90,8 @@ const updateCenterAddress = function (result: any, status: kakao.maps.services.S
  * @param data
  */
 const formatData = (data: Postcode): void => {
-    centerAddress.value = data.address;
-    searchAddress(centerAddress.value);
+    address.value = data.address;
+    searchAddress(address.value);
 };
 
 /**
