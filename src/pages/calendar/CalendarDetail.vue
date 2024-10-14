@@ -5,13 +5,13 @@
                 <q-btn class="arrow" icon="arrow_left"></q-btn>
                 <q-card class="column card-main">
                     <q-card-section class="col-3 calendar-header">
-                        <div class="text-h4">2020.10.10</div>
+                        <div class="text-h4">{{ dateStr }}</div>
                     </q-card-section>
-                    <q-card-section class="q-pt-none col-7 calendar-main" round> 섹션 </q-card-section>
+                    <q-card-section class="q-pt-none col-7 calendar-main"> 일정 리스트 보여질 곳 </q-card-section>
 
                     <q-card-actions class="col-2 calendar-footer" align="evenly">
                         <q-btn class="button" color="primary" label="편집" />
-                        <q-btn class="button" color="primary" label="닫기" v-close-popup />
+                        <q-btn class="button" color="primary" label="닫기" @click="close" />
                     </q-card-actions>
                 </q-card>
                 <q-btn class="arrow" icon="arrow_right"></q-btn>
@@ -19,20 +19,16 @@
         </div>
     </q-page>
 </template>
-<script lang="ts">
-import {defineComponent, ref} from 'vue';
-export default defineComponent({
-    name: 'CalendarDetail',
-    setup() {
-        const isVisible = ref(false);
+<script setup lang="ts">
+import {useRoute, useRouter} from 'vue-router';
 
-        return {
-            isVisible,
-            open,
-            close
-        };
-    }
-});
+const route = useRoute();
+const router = useRouter();
+const dateStr = route.query.dateStr;
+
+function close() {
+    router.back();
+}
 </script>
 <style scoped>
 .container {
@@ -64,7 +60,7 @@ export default defineComponent({
 
 .calendar-main {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     background-color: bisque;
     width: 100%;
