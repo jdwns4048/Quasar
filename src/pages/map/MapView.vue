@@ -95,7 +95,7 @@ const formatData = (data: Postcode): void => {
 };
 
 /**
- * 팝업을 엽니다.
+ * 주소 검색 팝업을 엽니다.
  */
 function openPopup(): void {
     if (popup.value) {
