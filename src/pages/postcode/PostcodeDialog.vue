@@ -1,5 +1,5 @@
 <template>
-    <q-dialog v-model="isOpened" persistent maximized transition-show="slide-up" transition-hide="slide-down">
+    <q-dialog v-model="isVisible" persistent maximized transition-show="slide-up" transition-hide="slide-down">
         <q-card class="bg-primary text-white qCard">
             <q-card-section class="test-cardSection">
                 <div class="dialogHeader">
@@ -21,9 +21,9 @@ const emit = defineEmits(['apply']);
 
 const POSTCODE_WIDTH = '100%';
 const POSTCODE_HEIGHT = '60%';
-const isOpened = ref(false);
+const isVisible = ref(false);
 const postcodeWrap = ref(null); //Postcode 렌더링할 DOM 요소
-const isPostcodeScriptLoaded = ref(true);
+const isNew = ref(true);
 
 /**
  * iframe을 통해 다이얼로그(팝업) 표시
@@ -43,12 +43,12 @@ const embedPostcode = (): void => {
  * 카카오 우편번호 서비스 API 스크립트를 로드
  */
 const loadPostcode = (): void => {
-    if (isPostcodeScriptLoaded.value) {
+    if (isNew.value) {
         const script = document.createElement('script');
         script.src = '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
         script.async = true;
         script.onload = () => {
-            isPostcodeScriptLoaded.value = false;
+            isNew.value = false;
             embedPostcode();
         };
         document.head.appendChild(script);
@@ -61,7 +61,7 @@ const loadPostcode = (): void => {
  * 팝업을 엽니다.
  */
 function open(): void {
-    isOpened.value = true;
+    isVisible.value = true;
     nextTick(() => {
         embedPostcode();
     });
@@ -71,7 +71,7 @@ function open(): void {
  * 팝업을 닫습니다.
  */
 function close(): void {
-    isOpened.value = false;
+    isVisible.value = false;
 }
 
 onMounted(() => {
