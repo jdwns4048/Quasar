@@ -1,7 +1,6 @@
 <template>
     <div ref="calendarRef" v-touch-swipe.mouse="onSwipeCalendar" style="padding: 16px"></div>
     <div class="row justify-center">
-        <!--        <CalendarDetail ref="detailPage"></CalendarDetail>-->
         <CalendarEdit ref="editPopup"></CalendarEdit>
     </div>
 </template>
@@ -16,6 +15,7 @@ import Interaction from '@event-calendar/interaction';
 import CalendarDetail from 'pages/calendar/CalendarDetail.vue';
 import CalendarEdit from 'pages/calendar/CalendarEdit.vue';
 import {useRouter} from 'vue-router';
+import {eventItems} from 'src/data/events';
 
 type CalendarType = 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay' | 'listWeek';
 export type CalendarEvent<T extends Record<string, any> = Record<string, any>> = {
@@ -85,47 +85,8 @@ export default defineComponent({
         const editPopup = ref();
         const instance = ref<Calendar>();
         const router = useRouter();
-        onMounted(() => {
-            initialize();
-        });
-        const eventItems = ref([
-            {
-                id: 'SP0000093',
-                start: '2024-10-10 10:00:30',
-                end: '2024-10-10 12:00:30',
-                title: 'Meeting'
-            },
-            {
-                id: 'SP0000094',
-                start: '2024-10-10 13:00:30',
-                end: '2024-10-17 15:00:30',
-                title: 'work1'
-            },
-            {
-                id: 'SP0000094',
-                start: '2024-10-10 13:00:30',
-                end: '2024-10-17 15:00:30',
-                title: 'work2'
-            },
-            {
-                id: 'SA0000083',
-                start: '2024-10-11T12:00:00',
-                end: '2024-10-11T13:00:00',
-                title: 'Lunch'
-            },
-            {
-                id: 'SA0000083',
-                start: '2024-10-11T12:00:00',
-                end: '2024-10-11T13:00:00',
-                title: 'Lunch'
-            },
-            {
-                id: 'SA0000083',
-                start: '2024-10-11T12:00:00',
-                end: '2024-10-11T13:00:00',
-                title: 'Lunch'
-            }
-        ]);
+        const eventItemsRef = ref(eventItems);
+
         function initialize() {
             //TODO 주말 외에 공휴일 표시하는 법 찾아볼것.
             instance.value = new Calendar({
@@ -140,7 +101,7 @@ export default defineComponent({
                             center: 'title',
                             end: ''
                         },
-                        events: eventItems.value,
+                        events: eventItemsRef.value,
                         dayMaxEvents: true,
                         nowIndicator: true,
                         selectable: false,
@@ -199,7 +160,7 @@ export default defineComponent({
         }
 
         function getDateEvents(date: string) {
-            return eventItems.value.filter(event => {
+            return eventItemsRef.value.filter(event => {
                 const startDate = new Date(event.start.slice(0, 10));
                 const endDate = new Date(event.end.slice(0, 10));
                 const targetDate = new Date(date);
@@ -207,11 +168,15 @@ export default defineComponent({
             });
         }
 
+        onMounted(() => {
+            initialize();
+        });
+
         return {
             calendarRef,
             detailPage,
             editPopup,
-            eventItems,
+            eventItems: eventItemsRef,
             onSwipeCalendar,
             getDateEvents
         };
