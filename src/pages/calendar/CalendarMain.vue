@@ -121,7 +121,6 @@ export default defineComponent({
                             //더보기 설정
                             const contentEl = document.createElement('span');
                             contentEl.innerHTML = `+ ${item.num}개의 추가 일정`;
-                            contentEl.innerHTML = `+ ${item.num}개의 추가 일정`;
                             contentEl.style.color = '#138535';
                             contentEl.style.cursor = 'pointer';
                             return {domNodes: [contentEl]};
@@ -178,9 +177,7 @@ export default defineComponent({
             calendarRef,
             detailPage,
             editPopup,
-            eventItems: eventItemsRef,
-            onSwipeCalendar,
-            getDateEvents
+            onSwipeCalendar
         };
     }
 });
