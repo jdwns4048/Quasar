@@ -13,7 +13,7 @@ const routes: RouteRecordRaw[] = [
             {path: 'validator', component: () => import('pages/test/Validator.vue')},
             {path: 'postcode', component: () => import('pages/searchAddress/SearchAddress.vue')},
             {path: 'map', component: () => import('pages/map/MapView.vue')},
-            {path: 'calendar', component: () => import('pages/calendar/CalendarMain.vue')},
+            {path: 'sales-activity', component: () => import('pages/sales/SalesActivityMain.vue')},
             {path: 'calendarDetail', component: () => import('pages/calendar/CalendarDetail.vue')}
         ]
     },
