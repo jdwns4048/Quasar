@@ -2,7 +2,7 @@
     <q-page class="q-pa-md">
         <div id="map"></div>
         <q-btn class="q-mt-md" color="primary" label="주소 검색" @click="openPopup" />
-        <ComSearchAddressPopup ref="popup" @apply="formatData" />
+        <ComSearchAddressPopup ref="popup" />
         <q-input class="textarea" v-model="address" label="map data" filled type="textarea" readonly />
     </q-page>
 </template>
@@ -86,20 +86,13 @@ const updateAddress = function (result: any, status: kakao.maps.services.Status)
 };
 
 /**
- * 카카오 우편번호 서비스 결과 값을 보기 좋은 형태로  변환.
- * @param data
- */
-const formatData = (data: Postcode): void => {
-    address.value = data.address;
-    searchAddress(address.value);
-};
-
-/**
  * 주소 검색 팝업을 엽니다.
  */
-function openPopup(): void {
+async function openPopup(): Promise<void> {
     if (popup.value) {
-        popup.value.open();
+        const data: Postcode = await popup.value.open();
+        address.value = data.address;
+        searchAddress(address.value);
     }
 }
 
