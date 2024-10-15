@@ -1,7 +1,8 @@
 <template>
     <q-page class="q-pa-md">
         <div id="map"></div>
-        <q-btn class="q-mt-md" color="primary" label="주소 검색" @click="openPopup" />
+        <q-btn class="q-mt-md q-mr-md" color="primary" label="주소 검색" @click="openPopup" />
+        <q-btn class="q-mt-md" color="primary" label="원위치(clear)" @click="clear" />
         <ComSearchAddressPopup ref="popup" @apply="formatData" />
         <q-input class="textarea" v-model="address" label="map data" filled type="textarea" readonly />
     </q-page>
@@ -11,7 +12,7 @@
 import {onMounted, ref} from 'vue';
 import ComSearchAddressPopup from 'components/ComSearchAddressPopup.vue';
 import {Postcode} from 'src/defines/postcode';
-
+import {KakaoMap} from 'vue3-kakao-maps';
 const map = ref<kakao.maps.Map | null>(null);
 const marker = ref<kakao.maps.Marker | null>(null);
 const geocoder = ref<kakao.maps.services.Geocoder | null>(null);
@@ -22,19 +23,18 @@ function initMap(): void {
     const container = document.getElementById('map') as HTMLElement;
     const options = {center: new kakao.maps.LatLng(37.2312, 127.071), level: 5};
     const markerPosition = options.center;
-
     map.value = new kakao.maps.Map(container, options);
     geocoder.value = new kakao.maps.services.Geocoder();
+    geocoder.value.coord2Address(options.center.getLng(), options.center.getLat(), updateAddress);
     marker.value = new kakao.maps.Marker({map: map.value, position: markerPosition});
-
-    kakao.maps.event.addListener(map.value, 'click', onMapClick);
+    kakao.maps.event.addListener(map.value, 'click', selectMapPoint);
 }
 
 /**
  * 지도 클릭 시 클릭한 위치의 좌표 정보를 통해 주소를 요청하고 해당 좌표에 마커를 표시한다.
  * @param point - 클릭한 위치의 좌표
  */
-function onMapClick(point: kakao.maps.event.MouseEvent): void {
+function selectMapPoint(point: kakao.maps.event.MouseEvent): void {
     const coords = point.latLng;
     if (geocoder.value) {
         geocoder.value.coord2Address(coords.getLng(), coords.getLat(), updateAddress);
@@ -103,6 +103,10 @@ function openPopup(): void {
     }
 }
 
+function clear(): void {
+    kakao.maps.load(initMap);
+}
+
 const loadMap = (): void => {
     if (document.querySelector('script[src*="dapi.kakao.com/v2/maps/sdk.js"]')) {
         kakao.maps.load(initMap);
@@ -125,7 +129,6 @@ onMounted(() => {
     width: 100%;
     height: 400px;
 }
-
 .textarea {
     margin-top: 20px;
 }
