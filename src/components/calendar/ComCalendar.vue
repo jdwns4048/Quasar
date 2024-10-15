@@ -1,27 +1,21 @@
 <template>
     <div ref="calendarRef" v-touch-swipe.mouse="onSwipeCalendar" style="padding: 16px"></div>
-    <div class="row justify-center">
-        <CalendarEdit ref="editPopup"></CalendarEdit>
-    </div>
 </template>
 
 <script lang="ts">
-import {onMounted, defineComponent, ref} from 'vue';
+import {onMounted, defineComponent, ref, PropType} from 'vue';
 import Calendar from '@event-calendar/core';
 import TimeGrid from '@event-calendar/time-grid';
 import DayGrid from '@event-calendar/day-grid';
 import List from '@event-calendar/list';
 import Interaction from '@event-calendar/interaction';
-import CalendarDetail from 'pages/calendar/CalendarDetail.vue';
-import CalendarEdit from 'pages/calendar/CalendarEdit.vue';
-import {useRouter} from 'vue-router';
-import {eventItems} from 'src/data/events';
 
 type CalendarType = 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay' | 'listWeek';
 export type CalendarEvent<T extends Record<string, any> = Record<string, any>> = {
     id: string;
     start: string; //ISO8601
     end: string; //ISO8601
+    date: Date;
     resourceId?: string | number;
     extendedProps: T;
     allDay?: boolean;
@@ -65,30 +59,24 @@ export type CalendarDatesSet = {
     view: CalendarView;
 };
 
-export type Info = {
-    date: Date; // 클릭된 날짜
-    dateStr: string; // 날짜 문자열
-    allDay: boolean; // 하루 종일 여부
-    resource?: any; // 리소스 객체 (선택적)
-    dayEl: HTMLElement; // 클릭된 전체 일 요소
-    jsEvent: MouseEvent;
-};
-
 export default defineComponent({
     name: 'CalendarMain',
-    components: {
-        CalendarDetail,
-        CalendarEdit
+    emits: ['item-touch', 'date-touch'],
+    props: {
+        items: {
+            type: Array as PropType<Array<Record<string, any>>>,
+            default: () => []
+        }
     },
+
     setup(props, context) {
         const calendarRef = ref<HTMLElement>();
         const detailPage = ref();
-        const editPopup = ref();
         const instance = ref<Calendar>();
-        const router = useRouter();
-        const eventItemsRef = ref(eventItems);
+        const eventItems = ref(props.items);
 
         function initialize() {
+            console.log('props => ', props);
             //TODO 주말 외에 공휴일 표시하는 법 찾아볼것.
             instance.value = new Calendar({
                 target: calendarRef.value,
@@ -102,7 +90,7 @@ export default defineComponent({
                             center: 'title',
                             end: ''
                         },
-                        events: eventItemsRef.value,
+                        events: eventItems.value,
                         dayMaxEvents: true,
                         nowIndicator: true,
                         selectable: false,
@@ -125,20 +113,11 @@ export default defineComponent({
                             contentEl.style.cursor = 'pointer';
                             return {domNodes: [contentEl]};
                         },
-                        //TODO 해당 라우터에 매개변수 info 를 보내야됨
-                        dateClick(info: Info) {
-                            const date = info.dateStr.slice(0, 10);
-                            const events = getDateEvents(date);
-                            router.push({
-                                path: '/calendarDetail',
-                                query: {
-                                    date: date,
-                                    events: JSON.stringify(events)
-                                }
-                            });
+                        dateClick(info: CalendarEventInfo) {
+                            context.emit('date-touch', info);
                         },
                         eventClick(info: CalendarEventInfo) {
-                            editPopup.value.open(info);
+                            context.emit('item-touch', info.event);
                         },
                         datesSet(datesSet: CalendarDatesSet) {},
                         noEventsContent(): string {
@@ -159,16 +138,6 @@ export default defineComponent({
             }
         }
 
-        function getDateEvents(date: string) {
-            return eventItemsRef.value.filter(event => {
-                const startDate = new Date(event.start.slice(0, 10));
-                const endDate = new Date(event.end.slice(0, 10));
-                const targetDate = new Date(date);
-
-                return targetDate >= startDate && targetDate <= endDate;
-            });
-        }
-
         onMounted(() => {
             initialize();
         });
@@ -176,7 +145,6 @@ export default defineComponent({
         return {
             calendarRef,
             detailPage,
-            editPopup,
             onSwipeCalendar
         };
     }

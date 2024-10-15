@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, watch} from 'vue';
+import {defineComponent, ref} from 'vue';
 import {dateToStr} from 'src/plugin/utils/format/date';
 
 export default defineComponent({
@@ -56,11 +56,10 @@ export default defineComponent({
         const startDate = ref('');
         const endDate = ref('');
         const testDate = ref();
-        function open(info) {
-            //TODO Date 형식 YYYY-MM-DD 로 변환
-            activityName.value = info.event.title;
-            startDate.value = dateToStr(info.event.start, 'YYYY-MM-DD');
-            endDate.value = dateToStr(info.event.end, 'YYYY-MM-DD');
+        function open(event) {
+            activityName.value = event.title;
+            startDate.value = dateToStr(event.start, 'YYYY-MM-DD');
+            endDate.value = dateToStr(event.end, 'YYYY-MM-DD');
             isVisible.value = true;
         }
 
@@ -71,9 +70,6 @@ export default defineComponent({
         function onSave() {
             isVisible.value = false;
         }
-        watch(startDate, (value) => {
-          console.log('startDate => ', value);
-        },{immediate:true});
         return {
             isVisible,
             activityName,
