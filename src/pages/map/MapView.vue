@@ -2,21 +2,21 @@
     <q-page class="q-pa-md">
         <div id="map"></div>
         <q-btn class="q-mt-md" color="primary" label="주소 검색" @click="openPopup" />
-        <PostcodeDialog ref="popup" @apply="formatData" />
+        <ComSearchAddressPopup ref="popup" @apply="formatData" />
         <q-input class="textarea" v-model="address" label="map data" filled type="textarea" readonly />
     </q-page>
 </template>
 
 <script setup lang="ts">
 import {onMounted, ref} from 'vue';
-import PostcodeDialog from 'pages/postcode/PostcodeDialog.vue';
+import ComSearchAddressPopup from 'pages/searchAddress/ComSearchAddressPopup.vue';
 import {Postcode} from 'src/defines/postcode';
 
 const map = ref<kakao.maps.Map | null>(null);
 const marker = ref<kakao.maps.Marker | null>(null);
 const geocoder = ref<kakao.maps.services.Geocoder | null>(null);
 const address = ref<string>('');
-const popup = ref<typeof PostcodeDialog | null>(null);
+const popup = ref<typeof ComSearchAddressPopup | null>(null);
 
 function initMap(): void {
     const container = document.getElementById('map') as HTMLElement;

@@ -1,34 +1,27 @@
 <template>
     <q-page class="q-pa-md">
         <q-btn color="primary" label="주소 검색" @click="openPopup" />
-        <PostcodeDialog ref="popup" @apply="formatData" />
+        <ComSearchAddressPopup ref="popup" />
         <q-input class="textArea" v-model="address" label="response data" filled type="textarea" readonly rows="25" />
     </q-page>
 </template>
 
 <script setup lang="ts">
 import {ref} from 'vue';
-import PostcodeDialog from 'pages/postcode/PostcodeDialog.vue';
+import ComSearchAddressPopup from 'pages/searchAddress/ComSearchAddressPopup.vue';
 import {formatPostcode} from 'src/plugin/utils/formatPostcode';
 import {Postcode} from 'src/defines/postcode';
 
 const address = ref('');
-const popup = ref<typeof PostcodeDialog | null>(null);
-
-/**
- * 카카오 우편번호 서비스 결과 값을 보기 좋은 형태로 변환.
- * @param data
- */
-const formatData = (data: Postcode): void => {
-    address.value = formatPostcode(data);
-};
+const popup = ref<typeof ComSearchAddressPopup | null>(null);
 
 /**
  * 팝업을 엽니다.
  */
-function openPopup(): void {
+async function openPopup() {
     if (popup.value) {
-        popup.value.open();
+        const data: Postcode = await popup.value.open();
+        address.value = formatPostcode(data);
     }
 }
 </script>

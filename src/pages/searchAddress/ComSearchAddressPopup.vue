@@ -17,56 +17,58 @@
 import {ref, onMounted, nextTick} from 'vue';
 import {Postcode} from 'src/defines/postcode';
 
-const emit = defineEmits(['apply']);
-
 const POSTCODE_WIDTH = '100%';
 const POSTCODE_HEIGHT = '60%';
 const isVisible = ref(false);
 const postcodeWrap = ref(null);
 const isNew = ref(true);
-const searchKeyword = ref<string | null>(null);
+const searchKeyword = ref<string | null>('기흥테라타워');
 
 /**
  * iframe을 통해 다이얼로그(팝업) 표시
  */
-const embedPostcode = (): void => {
+function embedPostcode(resolve: (data: Postcode) => void): void {
     new (window as any).daum.Postcode({
         width: POSTCODE_WIDTH,
         height: POSTCODE_HEIGHT,
         onComplete: (data: Postcode) => {
-            emit('apply', data);
-            close(); // 주소 선택 후 다이얼로그 닫기
+            resolve(data);
+            close();
         }
     }).embed(postcodeWrap.value!, {
         q: searchKeyword.value
     });
-};
+}
 
 /**
  * 카카오 우편번호 서비스 API 스크립트를 로드
  */
-const loadPostcode = (): void => {
-    if (isNew.value) {
-        const script = document.createElement('script');
-        script.src = '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
-        script.async = true;
-        script.onload = () => {
-            isNew.value = false;
-            embedPostcode();
-        };
-        document.head.appendChild(script);
-    } else {
-        embedPostcode();
-    }
-};
+function loadPostcode(): Promise<Postcode> {
+    return new Promise(resolve => {
+        if (isNew.value) {
+            const script = document.createElement('script');
+            script.src = '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+            script.async = true;
+            script.onload = () => {
+                isNew.value = false;
+                embedPostcode(resolve);
+            };
+            document.head.appendChild(script);
+        } else {
+            embedPostcode(resolve);
+        }
+    });
+}
 
 /**
  * 팝업을 엽니다.
  */
-function open(): void {
-    isVisible.value = true;
-    nextTick(() => {
-        embedPostcode();
+function open(): Promise<Postcode> {
+    return new Promise(resolve => {
+        isVisible.value = true;
+        nextTick(() => {
+            embedPostcode(resolve);
+        });
     });
 }
 
