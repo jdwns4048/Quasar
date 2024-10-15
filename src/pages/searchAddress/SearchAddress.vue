@@ -16,9 +16,13 @@ const address = ref('');
 const popup = ref<typeof ComSearchAddressPopup | null>(null);
 
 /**
- * 팝업을 엽니다.
+ * 팝업을 열고 주소 검색 결과를 처리
+ *
+ * @async
+ * @function openPopup
+ * @returns {Promise<void>}
  */
-async function openPopup() {
+async function openPopup(): Promise<void> {
     if (popup.value) {
         const data: Postcode = await popup.value.open();
         address.value = postcode(data);

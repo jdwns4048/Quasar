@@ -17,15 +17,18 @@
 import {ref, onMounted, nextTick} from 'vue';
 import {Postcode} from 'src/defines/postcode';
 
+//팝업 사이즈
 const POSTCODE_WIDTH = '100%';
 const POSTCODE_HEIGHT = '60%';
+
 const isVisible = ref(false);
-const postcodeWrap = ref(null);
+const postcodeWrap = ref(null); //우편번호 iframe을 포함할 DOM 요소
 const isNew = ref(true);
 const searchKeyword = ref<string | null>('기흥테라타워');
 
 /**
  * iframe을 통해 다이얼로그(팝업) 표시
+ * @param resolve - 주소 검색 결과를 반환하는 함수
  */
 function embedPostcode(resolve: (data: Postcode) => void): void {
     new (window as any).daum.Postcode({
@@ -42,6 +45,7 @@ function embedPostcode(resolve: (data: Postcode) => void): void {
 
 /**
  * 카카오 우편번호 서비스 API 스크립트를 로드
+ * @returns {Promise<Postcode>} - 주소 검색 결과를 포함하는 Promise
  */
 function initializePostcode(): Promise<Postcode> {
     return new Promise(resolve => {
@@ -62,6 +66,7 @@ function initializePostcode(): Promise<Postcode> {
 
 /**
  * 팝업을 엽니다.
+ * @returns {Promise<Postcode>} - 팝업에서 선택한 주소 데이터가 포함된 Promise 객체
  */
 function open(): Promise<Postcode> {
     return new Promise(resolve => {
@@ -79,6 +84,9 @@ function close(): void {
     clear();
 }
 
+/**
+ * 상태 초기화
+ */
 function clear(): void {
     isVisible.value = false;
 }
@@ -87,7 +95,7 @@ onMounted(() => {
     initializePostcode();
 });
 
-defineExpose({open, close});
+defineExpose({open});
 </script>
 
 <style scoped>
