@@ -22,8 +22,9 @@ const emit = defineEmits(['apply']);
 const POSTCODE_WIDTH = '100%';
 const POSTCODE_HEIGHT = '60%';
 const isVisible = ref(false);
-const postcodeWrap = ref(null); //Postcode 렌더링할 DOM 요소
+const postcodeWrap = ref(null);
 const isNew = ref(true);
+const searchKeyword = ref<string | null>(null);
 
 /**
  * iframe을 통해 다이얼로그(팝업) 표시
@@ -36,7 +37,9 @@ const embedPostcode = (): void => {
             emit('apply', data);
             close(); // 주소 선택 후 다이얼로그 닫기
         }
-    }).embed(postcodeWrap.value!);
+    }).embed(postcodeWrap.value!, {
+        q: searchKeyword.value
+    });
 };
 
 /**
@@ -73,6 +76,8 @@ function open(): void {
 function close(): void {
     isVisible.value = false;
 }
+
+function clear(): void {}
 
 onMounted(() => {
     loadPostcode();
