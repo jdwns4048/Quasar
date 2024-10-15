@@ -9,7 +9,7 @@
 <script setup lang="ts">
 import {ref} from 'vue';
 import ComSearchAddressPopup from 'components/ComSearchAddressPopup.vue';
-import {formatPostcode} from 'src/plugin/utils/formatPostcode';
+import {postcode} from 'src/plugin/utils/format/postcode';
 import {Postcode} from 'src/defines/postcode';
 
 const address = ref('');
@@ -21,7 +21,7 @@ const popup = ref<typeof ComSearchAddressPopup | null>(null);
 async function openPopup() {
     if (popup.value) {
         const data: Postcode = await popup.value.open();
-        address.value = formatPostcode(data);
+        address.value = postcode(data);
     }
 }
 </script>

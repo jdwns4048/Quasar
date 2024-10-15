@@ -1,6 +1,6 @@
 import {Postcode} from 'src/defines/postcode';
 
-export const formatPostcode = (data: Postcode) => {
+export const postcode = (data: Postcode) => {
     let formattedAddress = '';
     Object.keys(data).forEach(key => {
         const value = data[key] || ''; // 값이 없으면 ''로 설정
