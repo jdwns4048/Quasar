@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import {ref} from 'vue';
-import ComSearchAddressPopup from 'pages/searchAddress/ComSearchAddressPopup.vue';
+import ComSearchAddressPopup from 'components/ComSearchAddressPopup.vue';
 import {formatPostcode} from 'src/plugin/utils/formatPostcode';
 import {Postcode} from 'src/defines/postcode';
 

@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import {onMounted, ref} from 'vue';
-import ComSearchAddressPopup from 'pages/searchAddress/ComSearchAddressPopup.vue';
+import ComSearchAddressPopup from 'components/ComSearchAddressPopup.vue';
 import {Postcode} from 'src/defines/postcode';
 
 const map = ref<kakao.maps.Map | null>(null);

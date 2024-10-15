@@ -43,7 +43,7 @@ function embedPostcode(resolve: (data: Postcode) => void): void {
 /**
  * 카카오 우편번호 서비스 API 스크립트를 로드
  */
-function loadPostcode(): Promise<Postcode> {
+function initializePostcode(): Promise<Postcode> {
     return new Promise(resolve => {
         if (isNew.value) {
             const script = document.createElement('script');
@@ -76,13 +76,15 @@ function open(): Promise<Postcode> {
  * 팝업을 닫습니다.
  */
 function close(): void {
+    clear();
+}
+
+function clear(): void {
     isVisible.value = false;
 }
 
-function clear(): void {}
-
 onMounted(() => {
-    loadPostcode();
+    initializePostcode();
 });
 
 defineExpose({open, close});
