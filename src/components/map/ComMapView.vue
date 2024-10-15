@@ -103,6 +103,11 @@ function openPopup(): void {
     }
 }
 
+
+/**
+ * 지도 초기화(기존위치로 이동)
+ */
+
 function clear(): void {
     kakao.maps.load(initMap);
 }
