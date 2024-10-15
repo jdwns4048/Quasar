@@ -12,7 +12,7 @@
 import {onMounted, ref} from 'vue';
 import ComSearchAddressPopup from 'components/ComSearchAddressPopup.vue';
 import {Postcode} from 'src/defines/postcode';
-import {KakaoMap} from 'vue3-kakao-maps';
+
 const map = ref<kakao.maps.Map | null>(null);
 const marker = ref<kakao.maps.Marker | null>(null);
 const geocoder = ref<kakao.maps.services.Geocoder | null>(null);
@@ -23,7 +23,7 @@ function initMap(): void {
     const container = document.getElementById('map') as HTMLElement;
     const options = {center: new kakao.maps.LatLng(37.2312, 127.071), level: 5};
     const markerPosition = options.center;
-ㄴ
+
     map.value = new kakao.maps.Map(container, options);
     geocoder.value = new kakao.maps.services.Geocoder();
     geocoder.value.coord2Address(options.center.getLng(), options.center.getLat(), updateAddress);
@@ -96,7 +96,6 @@ async function openPopup(): Promise<void> {
         searchAddress(address.value);
     }
 }
-
 
 /**
  * 지도 초기화(기존위치로 이동)
