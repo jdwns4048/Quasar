@@ -2,7 +2,7 @@
     <q-page class="q-pa-md">
         <div class="container" v-touch-swipe.mouse="onSwipePage">
             <q-card class="dialog-card row">
-                <q-btn class="arrow" icon="arrow_left" @click="goPrevious"></q-btn>
+                <q-btn class="arrow" icon="arrow_left" @click="previous"></q-btn>
                 <q-card class="column card-main">
                     <q-card-section class="col-3 calendar-header">
                         <div class="text-h4">{{ formattedDate }}</div>
@@ -21,7 +21,7 @@
                         <q-btn class="button" color="primary" label="닫기" @click="close" />
                     </q-card-actions>
                 </q-card>
-                <q-btn class="arrow" icon="arrow_right" @click="goNext"></q-btn>
+                <q-btn class="arrow" icon="arrow_right" @click="next"></q-btn>
             </q-card>
         </div>
     </q-page>
@@ -63,17 +63,17 @@ function getEventsByDate(targetDate: Date) {
 function onSwipePage(event) {
     const direction = event.direction;
     if (direction === 'left') {
-        goNext();
+        next();
     } else if (direction === 'right') {
-        goPrevious();
+        previous();
     }
 }
 
-function goPrevious() {
+function previous() {
     date.value = new Date(date.value.setDate(date.value.getDate() - 1));
 }
 
-function goNext() {
+function next() {
     date.value = new Date(date.value.setDate(date.value.getDate() + 1));
 }
 
