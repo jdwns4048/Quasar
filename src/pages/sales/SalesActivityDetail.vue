@@ -1,15 +1,15 @@
 <template>
     <q-page class="q-pa-md">
-        <div class="container">
+        <div class="container" v-touch-swipe.mouse="onSwipePage">
             <q-card class="dialog-card row">
-                <q-btn class="arrow" icon="arrow_left"></q-btn>
+                <q-btn class="arrow" icon="arrow_left" @click="goPrevious"></q-btn>
                 <q-card class="column card-main">
                     <q-card-section class="col-3 calendar-header">
-                        <div class="text-h4">{{ date }}</div>
+                        <div class="text-h4">{{ formattedDate }}</div>
                     </q-card-section>
                     <q-card-section class="q-pt-none col-7 calendar-main">
-                        <div v-if="events.length > 0">
-                            <q-item v-for="event in events" :key="event.id">
+                        <div v-if="dailyEvents.length > 0">
+                            <q-item v-for="event in dailyEvents" :key="event.id">
                                 <q-item-section>{{ event.title }}</q-item-section>
                             </q-item>
                         </div>
@@ -21,14 +21,16 @@
                         <q-btn class="button" color="primary" label="닫기" @click="close" />
                     </q-card-actions>
                 </q-card>
-                <q-btn class="arrow" icon="arrow_right"></q-btn>
+                <q-btn class="arrow" icon="arrow_right" @click="goNext"></q-btn>
             </q-card>
         </div>
     </q-page>
 </template>
 <script setup lang="ts">
 import {useRoute, useRouter} from 'vue-router';
-import {ref} from 'vue';
+import {computed, ref, watch} from 'vue';
+import {eventItems} from 'src/data/events';
+import {dateToStr, strToDate} from 'src/plugin/utils/format/date';
 
 interface Event {
     id: string;
@@ -39,8 +41,41 @@ interface Event {
 
 const route = useRoute();
 const router = useRouter();
-const date = route.query.date as string;
-const events = ref<Event[]>(JSON.parse((route.query.events as string) || '[]'));
+const selectedDate = strToDate(route.query.date as string);
+const date = ref<Date>(selectedDate);
+const dailyEvents = ref<Event[]>(getEventsByDate(date.value));
+
+const formattedDate = computed(() => dateToStr(date.value, 'YYYY-MM-DD'));
+
+watch(date, newDate => {
+    dailyEvents.value = getEventsByDate(newDate);
+});
+
+function getEventsByDate(targetDate: Date) {
+    return eventItems.filter(event => {
+        const startDate = strToDate(event.start, 'YYYY-MM-DD');
+        const endDate = strToDate(event.end, 'YYYY-MM-DD');
+
+        return targetDate >= startDate && targetDate <= endDate;
+    });
+}
+
+function onSwipePage(event) {
+    const direction = event.direction;
+    if (direction === 'left') {
+        goNext();
+    } else if (direction === 'right') {
+        goPrevious();
+    }
+}
+
+function goPrevious() {
+    date.value = new Date(date.value.setDate(date.value.getDate() - 1));
+}
+
+function goNext() {
+    date.value = new Date(date.value.setDate(date.value.getDate() + 1));
+}
 
 function close() {
     router.back();
