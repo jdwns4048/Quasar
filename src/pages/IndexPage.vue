@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <div class="column items-center justify-center q-gutter-lg">
+        <div class="column justify-center q-gutter-lg">
             <q-btn class="item-button" size="md" color="white" text-color="black" stack @click="changeUrl('/sales-activity')">
                 <q-icon class="button-icon" name="calendar_month" />
                 <div>영업활동</div>
@@ -9,7 +9,7 @@
                 <q-icon class="button-icon" name="pin_drop" />
                 <div>지도</div>
             </q-btn>
-            <q-btn class="item-button" size="md" color="white" text-color="black" stack @click="changeUrl('/postcode')">
+            <q-btn class="item-button" size="md" color="white" text-color="black" stack @click="changeUrl('/searchAddress')">
                 <q-icon class="button-icon" name="my_location" />
                 <div>주소 검색</div>
             </q-btn>
