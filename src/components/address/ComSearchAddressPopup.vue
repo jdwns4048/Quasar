@@ -24,7 +24,7 @@ const POSTCODE_HEIGHT = '60%';
 const isVisible = ref<boolean>(false);
 const postcodeWrap = ref<HTMLDivElement | null>(null); //우편번호 iframe을 포함할 DOM 요소
 const isNew = ref<boolean>(true);
-const searchKeyword = ref<string | null>(null);
+const searchKeyword = ref<string | null>(null); // 주소 검색 기본 값
 
 /**
  * 주소 검색 팝업을 iframe으로 임베드하여 표시합니다.

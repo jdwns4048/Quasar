@@ -25,7 +25,7 @@
                     <q-icon name="pin_drop" style="font-size: 24px; margin-right: 15px" />
                     <q-item-section> 지도 </q-item-section>
                 </q-item>
-                <q-item clickable @click="changeUrl('/postcode')">
+                <q-item clickable @click="changeUrl('/searchAddress')">
                     <q-icon name="my_location" style="font-size: 24px; margin-right: 15px" />
                     <q-item-section> 주소 검색 </q-item-section>
                 </q-item>
