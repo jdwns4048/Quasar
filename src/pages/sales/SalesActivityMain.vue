@@ -1,5 +1,5 @@
 <template>
-<!--TODO 메소드(prev, next, today, 좌우 제스처) 추가해야 하는지?-->
+<!--TODO 메소드(prev, next, today, 좌우 제스처) 를 공용에 추가할지? 아니면 여기에 추가할지?-->
   <com-calendar
     :items="items"
     @item-touch="onItemTouch"
@@ -7,12 +7,12 @@
   >
   </com-calendar>
   <div class="row justify-center">
-    <sales-activity-edit ref="editPopup"></sales-activity-edit>
+    <sales-activity-schedule ref="editPopup"></sales-activity-schedule>
   </div>
 </template>
 <script lang="ts">
 import ComCalendar, {CalendarEvent} from 'components/calendar/ComCalendar.vue';
-import SalesActivityEdit from 'pages/sales/SalesActivityEdit.vue';
+import SalesActivitySchedule from 'pages/sales/SalesActivitySchedule.vue';
 import {defineComponent,ref} from 'vue';
 import {useRouter} from 'vue-router';
 import {dateToStr} from 'src/plugin/utils/format/date';
@@ -20,7 +20,7 @@ import {eventItems} from 'src/data/events';
 
 export default defineComponent({
   name:'SalesActivityMain',
-  components: {SalesActivityEdit, ComCalendar},
+  components: {SalesActivitySchedule, ComCalendar},
   setup(){
     const items = ref(eventItems);
     const editPopup = ref();
@@ -39,6 +39,7 @@ export default defineComponent({
         }
       })
     }
+    //TODO 더 나은 로직 고민할것.
     function getDateEvents(date: string) {
       return items.value.filter(event => {
         const startDate = new Date(event.start.slice(0, 10));

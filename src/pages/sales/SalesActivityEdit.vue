@@ -1,39 +1,37 @@
 <template>
-    <q-dialog v-model="isVisible">
-        <q-card>
+    <q-dialog v-model="isVisible" full-width>
+        <!-- TODO 다이얼로그, 입력창의 경우에  swipe 이벤트를 차단함  -->
+        <q-card v-touch-swipe.mouse="onSwipe">
             <q-card-section>
                 <q-input v-model="activityName" label="영업 활동" />
                 <div style="display: flex; gap: 10px">
-                    <div>
-                        <q-input filled v-model="startDate" mask="####-##-##" label="시작일">
-                            <template v-slot:append>
-                              <q-icon name="event" class="cursor-pointer">
-                                    <q-menu cover>
-                                        <q-date v-model="startDate" :title="startDate" subtitle="시작일">
-                                            <div class="row items-center justify-end">
-                                                <q-btn v-close-popup label="Close" color="primary" flat />
-                                            </div>
-                                        </q-date>
-                                    </q-menu>
-                              </q-icon>
-                            </template>
-                        </q-input>
-                    </div>
-                    <div>
-                        <q-input filled v-model="endDate" mask="####-##-##" label="종료일">
-                            <template v-slot:append>
-                                <q-icon name="event" class="cursor-pointer">
-                                    <q-menu cover>
-                                        <q-date v-model="endDate" :title="endDate" subtitle="종료일">
-                                            <div class="row items-center justify-end">
-                                                <q-btn v-close-popup label="Close" color="primary" flat />
-                                            </div>
-                                        </q-date>
-                                    </q-menu>
-                                </q-icon>
-                            </template>
-                        </q-input>
-                    </div>
+                    <q-input filled v-model="startDate" mask="####-##-##" label="시작일">
+                        <template v-slot:append>
+                            <q-icon name="event" class="cursor-pointer">
+                                <q-menu>
+                                    <q-date v-model="startDate" :title="startDate" mask="YYYY-MM-DD" subtitle="시작일">
+                                        <div class="row items-center justify-end">
+                                            <q-btn v-close-popup label="Close" color="primary" flat />
+                                        </div>
+                                    </q-date>
+                                </q-menu>
+                            </q-icon>
+                        </template>
+                    </q-input>
+
+                    <q-input filled v-model="endDate" mask="####-##-##" label="종료일">
+                        <template v-slot:append>
+                            <q-icon name="event" class="cursor-pointer">
+                                <q-menu>
+                                    <q-date v-model="endDate" :title="endDate" mask="YYYY-MM-DD" subtitle="종료일">
+                                        <div class="row items-center justify-end">
+                                            <q-btn v-close-popup label="Close" color="primary" flat />
+                                        </div>
+                                    </q-date>
+                                </q-menu>
+                            </q-icon>
+                        </template>
+                    </q-input>
                 </div>
             </q-card-section>
             <q-card-actions align="right">
@@ -55,7 +53,7 @@ export default defineComponent({
         const activityName = ref('');
         const startDate = ref('');
         const endDate = ref('');
-        const testDate = ref();
+
         function open(event) {
             activityName.value = event.title;
             startDate.value = dateToStr(event.start, 'YYYY-MM-DD');
@@ -70,15 +68,18 @@ export default defineComponent({
         function onSave() {
             isVisible.value = false;
         }
+        function onSwipe(event) {
+            console.log('swipe');
+        }
         return {
             isVisible,
             activityName,
             startDate,
             endDate,
-          testDate,
             open,
             onClose,
-            onSave
+            onSave,
+            onSwipe
         };
     }
 });

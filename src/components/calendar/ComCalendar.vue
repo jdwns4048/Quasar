@@ -71,13 +71,11 @@ export default defineComponent({
 
     setup(props, context) {
         const calendarRef = ref<HTMLElement>();
-        const detailPage = ref();
         const instance = ref<Calendar>();
         const eventItems = ref(props.items);
 
         function initialize() {
-            console.log('props => ', props);
-            //TODO 주말 외에 공휴일 표시하는 법 찾아볼것.
+            //TODO 공휴일 API 적용할것.
             instance.value = new Calendar({
                 target: calendarRef.value,
                 props: {
@@ -101,8 +99,6 @@ export default defineComponent({
                             const {event} = info;
                             const el = document.createElement('div');
                             el.textContent = event.title;
-                            // el.style.backgroundColor = event.backgroundColor || '#FF5733'; // 기본 배경색
-                            // el.style.color = event.textColor || '#FFFFFF';
                             return {domNodes: [el]};
                         },
                         moreLinkContent(item: CalendarMoreLink) {
@@ -114,12 +110,16 @@ export default defineComponent({
                             return {domNodes: [contentEl]};
                         },
                         dateClick(info: CalendarEventInfo) {
+                            //날짜 클릭
                             context.emit('date-touch', info);
                         },
                         eventClick(info: CalendarEventInfo) {
+                            //스케줄 클릭
                             context.emit('item-touch', info.event);
                         },
-                        datesSet(datesSet: CalendarDatesSet) {},
+                        datesSet(datesSet: CalendarDatesSet) {
+                            //달력 초기 세팅
+                        },
                         noEventsContent(): string {
                             return '해당 기간에 등록된 활동이 없습니다.';
                         }
@@ -144,7 +144,6 @@ export default defineComponent({
 
         return {
             calendarRef,
-            detailPage,
             onSwipeCalendar
         };
     }
