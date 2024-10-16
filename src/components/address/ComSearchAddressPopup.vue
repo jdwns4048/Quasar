@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted, nextTick} from 'vue';
+import {ref, nextTick} from 'vue';
 import {Postcode} from 'src/defines/postcode';
 
 //팝업 사이즈

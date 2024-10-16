@@ -9,10 +9,9 @@
 <script setup lang="ts">
 import {ref} from 'vue';
 import ComSearchAddressPopup from 'components/address/ComSearchAddressPopup.vue';
-import {postcode} from 'src/plugin/utils/format/postcode';
 import {Postcode} from 'src/defines/postcode';
 
-const address = ref('');
+const address = ref<string>('');
 const popup = ref<typeof ComSearchAddressPopup | null>(null);
 
 /**
@@ -25,8 +24,22 @@ const popup = ref<typeof ComSearchAddressPopup | null>(null);
 async function openPopup(): Promise<void> {
     if (popup.value) {
         const data: Postcode = await popup.value.open();
-        address.value = postcode(data);
+        address.value = formatData(data);
     }
+}
+
+/**
+ * 전달받은 데이터를 보여주기 좋은 포맷으로 변환.
+ * @param data
+ */
+function formatData(data: Postcode) {
+    let result = '';
+
+    Object.keys(data).forEach(key => {
+        const value = data[key] || ''; // 값이 없으면 ''로 설정
+        result += `${key}: ${value}\n`; // 각 줄마다 key: value 형식으로 추가
+    });
+    return result;
 }
 </script>
 
