@@ -1,7 +1,7 @@
 <template>
     <q-page class="q-pa-md">
         <q-btn color="primary" label="주소 검색" @click="openPopup" />
-        <ComSearchAddressPopup ref="popup" />
+        <com-search-address-popup ref="popup" searchKeyword="기흥테라타워" />
         <q-input class="textArea" v-model="address" label="response data" filled type="textarea" readonly rows="25" />
     </q-page>
 </template>

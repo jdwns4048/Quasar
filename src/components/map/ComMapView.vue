@@ -3,7 +3,7 @@
         <div id="map"></div>
         <q-btn class="q-mt-md q-mr-md" color="primary" label="주소 검색" @click="openPopup" />
         <q-btn class="q-mt-md" color="primary" label="원위치(clear)" @click="clear" />
-        <ComSearchAddressPopup ref="popup" />
+        <com-search-address-popup ref="popup" />
         <q-input class="textarea" v-model="address" label="map data" filled type="textarea" readonly />
     </q-page>
 </template>

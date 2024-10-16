@@ -17,6 +17,13 @@
 import {ref, nextTick} from 'vue';
 import {Postcode} from 'src/defines/postcode';
 
+const props = defineProps({
+    searchKeyword: {
+        type: String,
+        default: null
+    }
+});
+
 //팝업 사이즈
 const POSTCODE_WIDTH = '100%';
 const POSTCODE_HEIGHT = '60%';
@@ -24,7 +31,6 @@ const POSTCODE_HEIGHT = '60%';
 const isVisible = ref<boolean>(false);
 const postcodeWrap = ref<HTMLDivElement | null>(null); //우편번호 iframe을 포함할 DOM 요소
 const isNew = ref<boolean>(true);
-const searchKeyword = ref<string | null>(null); // 주소 검색 기본 값
 
 /**
  * 주소 검색 팝업을 iframe으로 임베드하여 표시합니다.
@@ -39,7 +45,7 @@ function embedPopup(resolve: (data: Postcode) => void): void {
             close();
         }
     }).embed(postcodeWrap.value!, {
-        q: searchKeyword.value
+        q: props.searchKeyword
     });
 }
 
