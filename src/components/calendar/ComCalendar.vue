@@ -1,5 +1,5 @@
 <template>
-    <div ref="calendarRef" v-touch-swipe.mouse="onSwipeCalendar" style="padding: 16px"></div>
+    <div ref="calendarRef" v-touch-swipe.mouse="onSwipeCalendar"></div>
 </template>
 
 <script lang="ts">
@@ -84,9 +84,9 @@ export default defineComponent({
                         view: 'dayGridMonth',
                         dayHeaderFormat: {weekday: 'short'}, // default
                         headerToolbar: {
-                            start: '',
-                            center: 'title',
-                            end: ''
+                            start: 'title',
+                            center: '',
+                            end: 'today'
                         },
                         events: eventItems.value,
                         dayMaxEvents: true,
@@ -104,7 +104,7 @@ export default defineComponent({
                         moreLinkContent(item: CalendarMoreLink) {
                             //더보기 설정
                             const contentEl = document.createElement('span');
-                            contentEl.innerHTML = `+ ${item.num}개의 추가 일정`;
+                            contentEl.innerHTML = `+ ${item.num}개`;
                             contentEl.style.color = '#138535';
                             contentEl.style.cursor = 'pointer';
                             return {domNodes: [contentEl]};
@@ -135,10 +135,10 @@ export default defineComponent({
                 instance.value.next();
             } else if (direction === 'right') {
                 instance.value.prev();
-            } else if (direction === 'down'){
-              console.log('down');
-            } else if (direction === 'up'){
-              console.log('up');
+            } else if (direction === 'down') {
+                console.log('down');
+            } else if (direction === 'up') {
+                console.log('up');
             }
         }
 
@@ -155,7 +155,7 @@ export default defineComponent({
 </script>
 <style scoped>
 :deep(.ec-title) {
-    font-size: 20px;
+    font-size: 15px;
     font-weight: bold;
 }
 :deep(.ec-content .ec-days .ec-day) {

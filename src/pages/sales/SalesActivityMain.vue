@@ -1,9 +1,18 @@
 <template>
-    <!--TODO 메소드(prev, next, today, 좌우 제스처) 를 공용에 추가할지? 아니면 여기에 추가할지?-->
+  <div style="padding: 16px">
+    <q-tabs v-model="selectedTab" align="justify">
+      <q-tab name="all" label="전체활동" />
+      <q-tab name="actual" label="실적 입력 활동" />
+      <q-tab name="plan" label="실적 미입력 활동" />
+    </q-tabs>
     <com-calendar :items="items" @item-touch="onItemTouch" @date-touch="onDateTouch"> </com-calendar>
     <div class="row justify-center">
-        <sales-activity-schedule ref="editPopup"></sales-activity-schedule>
+      <sales-activity-schedule ref="editPopup"></sales-activity-schedule>
     </div>
+    <div class="row justify-end">
+      <q-btn rounded color="primary" label="+ 활동추가" />
+    </div>
+  </div>
 </template>
 <script lang="ts">
 import ComCalendar, {CalendarEvent} from 'components/calendar/ComCalendar.vue';
@@ -17,6 +26,8 @@ export default defineComponent({
     name: 'SalesActivityMain',
     components: {SalesActivitySchedule, ComCalendar},
     setup() {
+        const selectedTab = ref('all');
+        //TODO 탭에 따라 items 가 바껴야함
         const items = ref(eventItems);
         const editPopup = ref();
         const router = useRouter();
@@ -34,6 +45,7 @@ export default defineComponent({
         }
 
         return {
+            selectedTab,
             items,
             editPopup,
             onItemTouch,
@@ -42,4 +54,9 @@ export default defineComponent({
     }
 });
 </script>
-<style scoped></style>
+<style scoped>
+.q-tab {
+    flex: 1 1 0;
+    max-width: none;
+}
+</style>

@@ -19,7 +19,7 @@
                 </q-item>
                 <q-item clickable @click="changeUrl('/sales-activity')">
                     <q-icon name="calendar_month" style="font-size: 24px; margin-right: 15px" />
-                    <q-item-section> 영업활동 </q-item-section>
+                    <q-item-section> 영업활동관리 </q-item-section>
                 </q-item>
                 <q-item clickable @click="changeUrl('/map')">
                     <q-icon name="pin_drop" style="font-size: 24px; margin-right: 15px" />
