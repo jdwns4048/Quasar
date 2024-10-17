@@ -12,8 +12,7 @@ const routes: RouteRecordRaw[] = [
             {path: 'inputvalue', component: () => import('pages/test/InputValue.vue')},
             {path: 'validator', component: () => import('pages/test/Validator.vue')},
             {path: 'searchAddress', component: () => import('pages/searchAddress/SearchAddress.vue')},
-            {path: 'map', component: () => import('components/map/ComMapView.vue')},
-
+            {path: 'map', component: () => import('pages/map/MapVIew.vue')},
             //TODO 경로 수정할것 & 쿼리를 통해 Detail 로 보내줄것..
             {path: 'sales-activity', component: () => import('pages/sales/SalesActivityMain.vue')},
 
