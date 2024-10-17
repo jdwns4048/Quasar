@@ -1,6 +1,7 @@
 <template>
     <q-page class="q-pa-md">
-        <q-btn color="primary" label="주소 검색" @click="openPopup" />
+        <q-input class="input" v-model="searchKeyword" label="검색할 주소 입력" filled type="text" />
+        <q-btn color="primary" label="주소 검색" @click="openPopup(searchKeyword)" />
         <com-search-address-popup ref="popup" searchKeyword="기흥테라타워" />
         <q-input class="textArea" v-model="address" label="response data" filled type="textarea" readonly rows="25" />
     </q-page>
@@ -13,6 +14,7 @@ import {Postcode} from 'src/defines/postcode';
 
 const address = ref<string>('');
 const popup = ref<typeof ComSearchAddressPopup | null>(null);
+const searchKeyword = ref<string | null>(null);
 
 /**
  * 팝업을 열고 주소 검색 결과를 처리
@@ -21,9 +23,9 @@ const popup = ref<typeof ComSearchAddressPopup | null>(null);
  * @function openPopup
  * @returns {Promise<void>}
  */
-async function openPopup(): Promise<void> {
+async function openPopup(keyword: string | null): Promise<void> {
     if (popup.value) {
-        const data: Postcode = await popup.value.open();
+        const data: Postcode = await popup.value.open(keyword);
         address.value = formatData(data);
     }
 }
@@ -44,6 +46,10 @@ function formatData(data: Postcode) {
 </script>
 
 <style>
+.input {
+    margin-bottom: 10px;
+}
+
 .textArea {
     margin-top: 20px;
 }

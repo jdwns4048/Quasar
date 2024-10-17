@@ -31,6 +31,7 @@ const POSTCODE_HEIGHT = '60%';
 const isVisible = ref<boolean>(false);
 const postcodeWrap = ref<HTMLDivElement | null>(null); //우편번호 iframe을 포함할 DOM 요소
 const isNew = ref<boolean>(true);
+const keyword = ref<string | null>(null);
 
 /**
  * 주소 검색 팝업을 iframe으로 임베드하여 표시합니다.
@@ -46,6 +47,7 @@ function embedPopup(resolve: (data: Postcode) => void): void {
         }
     }).embed(postcodeWrap.value!, {
         q: props.searchKeyword
+        // q: keyword.value
     });
 }
 
@@ -76,10 +78,13 @@ function loadApiScript(): Promise<void> {
 
 /**
  * 주소 검색 팝업을 엽니다.
+ *
  * @returns {Promise<Postcode>} - 팝업에서 선택한 주소 데이터가 포함된 Promise 객체
  */
-function open(): Promise<Postcode> {
+function open(searchKeyword: string | null = null): Promise<Postcode> {
     return new Promise(resolve => {
+        console.log(searchKeyword);
+        keyword.value = searchKeyword;
         isVisible.value = true;
         nextTick(() => {
             loadApiScript()
