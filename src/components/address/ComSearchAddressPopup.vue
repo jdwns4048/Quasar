@@ -83,7 +83,6 @@ function loadApiScript(): Promise<void> {
  */
 function open(searchKeyword: string | null = null): Promise<Postcode> {
     return new Promise(resolve => {
-        console.log(searchKeyword);
         keyword.value = searchKeyword;
         isVisible.value = true;
         nextTick(() => {
