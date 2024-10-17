@@ -9,7 +9,7 @@
                     </q-card-section>
                     <q-card-section class="q-pt-none col-7 calendar-main">
                         <div v-if="dailyEvents.length > 0">
-                            <q-item v-for="event in dailyEvents" :key="event.id">
+                            <q-item v-for="(event, index) in dailyEvents" :key="index">
                                 <q-item-section>{{ event.title }}</q-item-section>
                             </q-item>
                         </div>
@@ -33,7 +33,7 @@ import {eventItems} from 'src/data/events';
 import {dateToStr, strToDate} from 'src/plugin/utils/format/date';
 
 interface Event {
-    id: string;
+    skedCode: string;
     start: string;
     end: string;
     title: string;

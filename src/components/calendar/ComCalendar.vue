@@ -135,6 +135,10 @@ export default defineComponent({
                 instance.value.next();
             } else if (direction === 'right') {
                 instance.value.prev();
+            } else if (direction === 'down'){
+              console.log('down');
+            } else if (direction === 'up'){
+              console.log('up');
             }
         }
 
