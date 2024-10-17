@@ -46,8 +46,8 @@ function embedPopup(resolve: (data: Postcode) => void): void {
             close();
         }
     }).embed(postcodeWrap.value!, {
-        q: props.searchKeyword
-        // q: keyword.value
+        // q: props.searchKeyword
+        q: keyword.value
     });
 }
 

@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <q-input class="input" v-model="searchKeyword" label="검색할 주소 입력" filled type="text" />
+        <q-input class="input" v-model="searchKeyword" label="검색할 주소 입력" outlined type="text" />
         <q-btn color="primary" label="주소 검색" @click="openPopup(searchKeyword)" />
         <com-search-address-popup ref="popup" searchKeyword="기흥테라타워" />
         <q-input class="textArea" v-model="address" label="response data" filled type="textarea" readonly rows="25" />
