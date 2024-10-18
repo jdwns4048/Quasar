@@ -3,13 +3,21 @@
 </template>
 
 <script setup lang="ts">
+import {resolve} from 'node:path/win32';
 import {onMounted, ref} from 'vue';
+//defineEmits
+const emit = defineEmits(['select', 'search-completed']);
+//defineProps
+//defineExpose
+/** Exposed Methods **/
+defineExpose({search, clear});
+
 const map = ref<kakao.maps.Map | null>(null);
 const marker = ref<kakao.maps.Marker | null>(null);
 const geocoder = ref<kakao.maps.services.Geocoder | null>(null);
 const address = ref<string>('');
-const emit = defineEmits(['map-click', 'search-completed']);
 
+//TODO async, await 형식으로 변경 예정 .
 const loadMap = (): void => {
     if (document.querySelector('script[src*="dapi.kakao.com/v2/maps/sdk.js"]')) {
         kakao.maps.load(initMap);
@@ -21,10 +29,6 @@ const loadMap = (): void => {
     script.onload = () => kakao.maps.load(initMap);
     document.head.appendChild(script);
 };
-
-onMounted(() => {
-    loadMap();
-});
 
 /** Handlers **/
 function initMap(): void {
@@ -47,13 +51,14 @@ function initMap(): void {
 //TODO Marker 사용 여부(boolean).
 function onMapClick(event: kakao.maps.event.MouseEvent): void {
     const coords = event.latLng;
-    const locationData = [coords.getLat(), coords.getLng()] as [number, number];
+    emit('select', event);
+    // const locationData = [coords.getLat(), coords.getLng()] as [number, number];
     // search(locationData);
-    emit('map-click', locationData);
     if (geocoder.value) {
         geocoder.value.coord2Address(coords.getLng(), coords.getLat(), updateAddress);
-        setMarker(coords);
+        emit('search-completed', address.value);
     }
+    // setMarker(coords);
 }
 
 /**
@@ -79,13 +84,13 @@ function searchByCoord(coords: [number, number]) {
 }
 
 /**
- * 값이 없을땐 초기 위치로 이동
+ * 값이 없을땐 초기화
  * @param value
  */
-const search = (value: string | [number, number]) => {
+function search(value: string | [number, number]) {
     if (!value) return kakao.maps.load(initMap);
     typeof value === 'string' ? searchByAddress(value) : searchByCoord(value);
-};
+}
 
 /**
  * 선택된 위치로 마커 이동
@@ -94,7 +99,7 @@ const search = (value: string | [number, number]) => {
 function setMarker(point: kakao.maps.LatLng): void {
     if (marker.value) {
         marker.value.setPosition(point);
-        map.value?.setCenter(point);
+        // map.value?.setCenter(point);
     }
 }
 
@@ -102,12 +107,12 @@ function setMarker(point: kakao.maps.LatLng): void {
  * 좌표로 상세 주소 정보를 address 위치에 보여즘
  *
  */
-const updateAddress = function (result: any, status: kakao.maps.services.Status) {
+function updateAddress(result: any, status: kakao.maps.services.Status) {
     if (status === kakao.maps.services.Status.OK) {
         address.value = result[0].address.address_name;
         emit('search-completed', address.value);
     }
-};
+}
 
 /**
  * 주소 검색 결과를 처리하는 콜백 함수
@@ -118,27 +123,26 @@ function handleSearchResult(result: any, status: kakao.maps.services.Status): vo
     if (status === kakao.maps.services.Status.OK) {
         const latlng = new kakao.maps.LatLng(Number(result[0].y), Number(result[0].x));
         setMarker(latlng);
+        map.value?.setCenter(latlng);
     }
 }
 
 /**
  * 지도 초기화(기존위치로 이동)
  */
-
 function clear(): void {
     kakao.maps.load(initMap);
 }
-/** Exposed Methods **/
-defineExpose({search, clear});
+
+//TODO async, await 형식으로 변경 예정 .
+onMounted(() => {
+    loadMap();
+});
 </script>
 
 <style scoped>
 #map {
     width: 100%;
     height: 400px;
-}
-
-.textarea {
-    margin-top: 20px;
 }
 </style>
