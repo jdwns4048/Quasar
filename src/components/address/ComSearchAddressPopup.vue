@@ -1,10 +1,10 @@
 <template>
     <q-dialog v-model="isVisible" persistent maximized transition-show="slide-up" transition-hide="slide-down">
-        <q-card class="bg-primary text-white qCard">
-            <q-card-section class="test-cardSection">
-                <div class="dialogHeader">
+        <q-card class="bg-primary text-white q-card">
+            <q-card-section class="card-section">
+                <div class="dialog-header">
                     <span class="text-h6">주소 검색</span>
-                    <q-btn class="bg-white text-primary closeBtn" @click="close"> 닫기 </q-btn>
+                    <q-btn class="bg-white text-primary close-btn" @click="close"> 닫기 </q-btn>
                 </div>
                 <div ref="postcodeWrap" class="postcode-iframe-wrap"></div>
                 <div class="guide"></div>
@@ -18,7 +18,7 @@ import {ref, nextTick} from 'vue';
 import {Postcode} from 'src/defines/postcode';
 
 const props = defineProps({
-    searchKeyword: {
+    keyword: {
         type: String,
         default: null
     }
@@ -31,7 +31,7 @@ const POSTCODE_HEIGHT = '60%';
 const isVisible = ref<boolean>(false);
 const postcodeWrap = ref<HTMLDivElement | null>(null); //우편번호 iframe을 포함할 DOM 요소
 const isNew = ref<boolean>(true);
-const keyword = ref<string | null>(null);
+const lazyKeyword = ref<string | null>(null);
 
 /**
  * 주소 검색 팝업을 iframe으로 임베드하여 표시합니다.
@@ -46,8 +46,7 @@ function embedPopup(resolve: (data: Postcode) => void): void {
             close();
         }
     }).embed(postcodeWrap.value!, {
-        // q: props.searchKeyword
-        q: keyword.value
+        q: lazyKeyword.value
     });
 }
 
@@ -81,18 +80,13 @@ function loadApiScript(): Promise<void> {
  *
  * @returns {Promise<Postcode>} - 팝업에서 선택한 주소 데이터가 포함된 Promise 객체
  */
-function open(searchKeyword: string | null = null): Promise<Postcode> {
+function open(keyword: string | null = null): Promise<Postcode> {
     return new Promise(resolve => {
-        keyword.value = searchKeyword;
+        lazyKeyword.value = keyword || props.keyword;
         isVisible.value = true;
-        nextTick(() => {
-            loadApiScript()
-                .then(() => {
-                    embedPopup(resolve);
-                })
-                .catch(error => {
-                    console.error(error);
-                });
+        nextTick(async () => {
+            await loadApiScript();
+            embedPopup(resolve);
         });
     });
 }
@@ -115,17 +109,17 @@ defineExpose({open});
 </script>
 
 <style scoped>
-.dialogHeader {
+.dialog-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.qCard {
+.q-card {
     height: 100vh;
 }
 
-.test-cardSection {
+.card-section {
     height: 100%;
 }
 
@@ -140,7 +134,7 @@ defineExpose({open});
     margin-top: 10px;
 }
 
-.closeBtn {
+.close-btn {
     width: 100px;
     height: 30px;
 }

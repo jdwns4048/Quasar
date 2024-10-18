@@ -2,8 +2,8 @@
     <q-page class="q-pa-md">
         <q-input class="input" v-model="searchKeyword" label="검색할 주소 입력" outlined type="text" />
         <q-btn color="primary" label="주소 검색" @click="openPopup(searchKeyword)" />
-        <com-search-address-popup ref="popup" searchKeyword="기흥테라타워" />
-        <q-input class="textArea" v-model="address" label="response data" filled type="textarea" readonly rows="25" />
+        <com-search-address-popup ref="popup" keyword="기흥테라타워" />
+        <q-input class="text-area" v-model="address" label="response data" filled type="textarea" readonly rows="25" />
     </q-page>
 </template>
 
@@ -50,7 +50,7 @@ function formatData(data: Postcode) {
     margin-bottom: 10px;
 }
 
-.textArea {
+.text-area {
     margin-top: 20px;
 }
 </style>
