@@ -18,7 +18,7 @@ const geocoder = ref<kakao.maps.services.Geocoder | null>(null);
 const address = ref<string>('');
 
 //TODO async, await 형식으로 변경 예정 .
-const loadMap = (): void => {
+function loadMap() {
     if (document.querySelector('script[src*="dapi.kakao.com/v2/maps/sdk.js"]')) {
         kakao.maps.load(initMap);
         return;
@@ -28,7 +28,7 @@ const loadMap = (): void => {
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${key}&autoload=false&libraries=services`;
     script.onload = () => kakao.maps.load(initMap);
     document.head.appendChild(script);
-};
+}
 
 /** Handlers **/
 function initMap(): void {
@@ -47,18 +47,14 @@ function initMap(): void {
  * @param event - 클릭한 위치의 좌표
  */
 
-//TODO geocoder 공통화 시킬 예정 .
 //TODO Marker 사용 여부(boolean).
 function onMapClick(event: kakao.maps.event.MouseEvent): void {
     const coords = event.latLng;
     emit('select', event);
-    // const locationData = [coords.getLat(), coords.getLng()] as [number, number];
-    // search(locationData);
     if (geocoder.value) {
         geocoder.value.coord2Address(coords.getLng(), coords.getLat(), updateAddress);
         emit('search-completed', address.value);
     }
-    // setMarker(coords);
 }
 
 /**
