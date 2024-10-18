@@ -4,7 +4,7 @@
             <q-toolbar>
                 <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
                 <q-toolbar-title class="text-center full-width" clickable @click="changeUrl('/')"> T-CRM </q-toolbar-title>
-                <div><q-icon name="notifications" style="font-size: 24px" /></div>
+                <q-icon name="notifications" style="font-size: 24px" />
             </q-toolbar>
         </q-header>
 
@@ -33,6 +33,9 @@
         </q-drawer>
 
         <q-page-container padding>
+            <!-- TODO 해당 버튼의 레이아웃 고민할것 -->
+            <q-btn flat unelevated icon="arrow_back" style="color: black" @click="goBack" />
+            <q-btn flat unelevated icon="arrow_forward" style="color: black" @click="goForward" />
             <router-view />
         </q-page-container>
     </q-layout>
@@ -50,6 +53,21 @@ const leftDrawerOpen = ref(false);
  */
 function toggleLeftDrawer() {
     leftDrawerOpen.value = !leftDrawerOpen.value;
+}
+
+/**
+ * 뒤로 가기
+ */
+function goBack() {
+    // router.back();
+  router.forward();
+}
+
+/**
+ * 앞으로 가기
+ */
+function goForward(){
+  router.forward();
 }
 
 /**
