@@ -23,6 +23,7 @@ const props = defineProps({
         default: null
     }
 });
+defineExpose({open});
 
 //팝업 사이즈
 const POSTCODE_WIDTH = '100%';
@@ -104,8 +105,6 @@ function close(): void {
 function clear(): void {
     isVisible.value = false;
 }
-
-defineExpose({open});
 </script>
 
 <style scoped>
