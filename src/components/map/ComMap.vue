@@ -8,6 +8,9 @@ import {onMounted, ref, toRefs} from 'vue';
 //defineEmits
 const emit = defineEmits(['select', 'search-completed', 'markerAdded']);
 //defineProps
+
+//TODO maxMarkers default 변경 예정 .
+
 const props = defineProps({
     canAddMultipleMarkers: {
         type: Boolean,
@@ -116,7 +119,6 @@ function createMarker(lat, lng) {
     if (!canAddMultipleMarkers.value || markers.value.length > maxMarkers.value) {
         return;
     }
-    console.log(markers.value.length, maxMarkers.value);
     if (map.value) {
         const marker = new kakao.maps.Marker({
             map: map.value,
