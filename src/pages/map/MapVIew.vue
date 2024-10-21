@@ -1,6 +1,13 @@
 <template>
     <q-page class="q-pa-md">
-        <com-map-view ref="mapViewRef" @select="handleMapClick" @search-completed="handleSearchCompletion"></com-map-view>
+        <com-map-view
+            ref="mapViewRef"
+            @select="handleMapClick"
+            @search-completed="handleSearchCompletion"
+            :canAddMultipleMarkers="true"
+            :max-markers="4"
+            @markerAdded="handleMarkerAdded"
+        ></com-map-view>
         <q-btn class="q-mt-md q-mr-md" color="primary" label="주소 검색" @click="openPopup" />
         <q-btn class="q-mt-md" color="primary" label="원위치(clear)" @click="clear" />
         <com-search-address-popup ref="popup" />
@@ -13,11 +20,11 @@ import {ref} from 'vue';
 import ComMapView from 'components/map/ComMap.vue';
 import ComSearchAddressPopup from 'components/address/ComSearchAddressPopup.vue';
 import {Postcode} from 'src/defines/postcode';
-
 const popup = ref<typeof ComSearchAddressPopup | null>(null);
 const address = ref<string>('');
 const coordinates = ref<null>();
 const mapViewRef = ref<typeof ComMapView | null>(null);
+const locationMarkers = ref<Array<Record<number, number>>>([]);
 
 /**
  * 주소 검색 팝업을 엽니다.
@@ -56,6 +63,11 @@ function searchAddress(addressData: string | [number, number]) {
  */
 function handleSearchCompletion(result: string) {
     address.value = result;
+}
+
+//TODO Marker 추가 여부
+function handleMarkerAdded(marker) {
+    console.log('Marker added', marker);
 }
 
 /**
