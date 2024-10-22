@@ -5,7 +5,7 @@
             @select="handleMapClick"
             @search-completed="handleSearchCompletion"
             :canAddMultipleMarkers="true"
-            :max-markers="4"
+            :max-markers="2"
             @markerAdded="handleMarkerAdded"
         ></com-map-view>
         <q-btn class="q-mt-md q-mr-md" color="primary" label="주소 검색" @click="openPopup" />

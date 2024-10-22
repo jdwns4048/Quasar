@@ -30,8 +30,24 @@ const marker = ref<kakao.maps.Marker | null>(null);
 const geocoder = ref<kakao.maps.services.Geocoder | null>(null);
 const address = ref<string>('');
 const markers = ref<kakao.maps.Marker[]>([]); // 추가: 마커들을 저장할 배열 레퍼런스
+const positions = [
+    {
+        title: '기흥테라타워',
+        lat: 37.2312,
+        lng: 127.071
+    },
+    {
+        title: '자동차검사소',
+        lat: 37.23087870081864,
+        lng: 127.06806260767284
+    },
+    {
+        title: '르노코리아',
+        lat: 37.22932910715828,
+        lng: 127.06770062570571
+    }
+];
 
-const {canAddMultipleMarkers, maxMarkers} = toRefs(props);
 //TODO async, await 형식으로 변경 예정 .
 function loadMap() {
     if (document.querySelector('script[src*="dapi.kakao.com/v2/maps/sdk.js"]')) {
@@ -49,12 +65,20 @@ function loadMap() {
 function initMap() {
     const container = document.getElementById('map') as HTMLElement;
     const options = {center: new kakao.maps.LatLng(37.2312, 127.071), level: 5};
-    const markerPosition = options.center;
     map.value = new kakao.maps.Map(container, options);
-    marker.value = new kakao.maps.Marker({map: map.value, position: markerPosition});
 
     geocoder.value = new kakao.maps.services.Geocoder();
     geocoder.value.coord2Address(options.center.getLng(), options.center.getLat(), updateAddress);
+
+    for (let i = 0; i < props.maxMarkers; i++) {
+        if (map.value) {
+            const marker = new kakao.maps.Marker({
+                map: map.value,
+                position: new kakao.maps.LatLng(positions[i].lat, positions[i].lng)
+            });
+            markers.value.push(marker); // Marker 추가를 배열에 추가
+        }
+    }
 
     kakao.maps.event.addListener(map.value, 'click', onMapClick);
 }
@@ -70,7 +94,6 @@ function onMapClick(event: kakao.maps.event.MouseEvent): void {
         geocoder.value.coord2Address(coords.getLng(), coords.getLat(), updateAddress);
         emit('search-completed', address.value);
     }
-    createMarker(coords.getLat(), coords.getLng());
 }
 
 /**
@@ -114,20 +137,6 @@ function setMarker(point: kakao.maps.LatLng): void {
     }
 }
 
-//TODO markers 수 컨트롤 예정 - 수정중
-function createMarker(lat, lng) {
-    if (!canAddMultipleMarkers.value || markers.value.length > maxMarkers.value) {
-        return;
-    }
-    if (map.value) {
-        const marker = new kakao.maps.Marker({
-            map: map.value,
-            position: new kakao.maps.LatLng(lat, lng)
-        });
-        markers.value.push(marker); // Marker 추가를 배열에 추가
-        emit('markerAdded', marker);
-    }
-}
 /**
  * 좌표로 상세 주소 정보를 address 위치에 보여즘
  *
