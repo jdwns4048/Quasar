@@ -1,6 +1,5 @@
 <template>
-    <q-dialog v-model="isVisible" full-width>
-      <q-card v-touch-swipe.mouse="onSwipe" >
+      <q-card v-model="isVisible" v-touch-swipe.mouse="onSwipe" >
         <q-card-section>
           <p>{{activityName}}</p>
           <div style="display: flex; gap: 10px">
@@ -38,7 +37,6 @@
           <q-btn flat label="저장" @click="onSave" />
         </q-card-actions>
       </q-card>
-    </q-dialog>
 </template>
 
 <script lang="ts">
@@ -54,10 +52,10 @@ export default defineComponent({
         const endDate = ref('');
 
         function open(event) {
+            isVisible.value = true;
             activityName.value = event.title;
             startDate.value = dateToStr(event.start, 'YYYY-MM-DD');
             endDate.value = dateToStr(event.end, 'YYYY-MM-DD');
-            isVisible.value = true;
         }
 
         function onClose() {
