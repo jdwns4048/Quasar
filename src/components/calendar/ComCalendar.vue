@@ -1,5 +1,5 @@
 <template>
-    <div ref="calendarRef" v-touch-swipe.mouse="onSwipeCalendar"></div>
+    <div ref="calendarRef" :style="{height: calendarHeight}" v-touch-swipe.mouse="onSwipeCalendar"></div>
 </template>
 
 <script lang="ts">
@@ -61,11 +61,15 @@ export type CalendarDatesSet = {
 
 export default defineComponent({
     name: 'CalendarMain',
-    emits: ['item-touch', 'date-touch'],
+    emits: ['item-touch', 'day-touch'],
     props: {
         items: {
             type: Array as PropType<Array<Record<string, any>>>,
             default: () => []
+        },
+        viewType:{
+            type: String,
+            default: 'dayGridMonth'
         }
     },
 
@@ -73,6 +77,7 @@ export default defineComponent({
         const calendarRef = ref<HTMLElement>();
         const instance = ref<Calendar>();
         const eventItems = ref(props.items);
+        const calendarHeight = ref('500px');
 
         function initialize() {
             //TODO 공휴일 API 적용할것.
@@ -81,15 +86,17 @@ export default defineComponent({
                 props: {
                     plugins: [TimeGrid, DayGrid, List, Interaction],
                     options: {
-                        view: 'dayGridMonth',
+                        view: props.viewType,
                         dayHeaderFormat: {weekday: 'short'}, // default
                         headerToolbar: {
-                            start: 'title',
+                            start: '',
                             center: '',
-                            end: 'today'
+                            end: ''
                         },
                         events: eventItems.value,
+                        eventColor:'#ED1C24',
                         dayMaxEvents: true,
+                        height: '100%', // {'auto' | 'px' | '%'}
                         nowIndicator: true,
                         selectable: false,
                         eventStartEditable: false,
@@ -98,7 +105,9 @@ export default defineComponent({
                             //스케쥴 커스터마이징
                             const {event} = info;
                             const el = document.createElement('div');
-                            el.textContent = event.title;
+                            if(props.viewType === 'listDay'){
+                              el.textContent = event.title;
+                            }
                             return {domNodes: [el]};
                         },
                         moreLinkContent(item: CalendarMoreLink) {
@@ -111,15 +120,13 @@ export default defineComponent({
                         },
                         dateClick(info: CalendarEventInfo) {
                             //날짜 클릭
-                            context.emit('date-touch', info);
+                            context.emit('day-touch', info);
                         },
                         eventClick(info: CalendarEventInfo) {
                             //스케줄 클릭
                             context.emit('item-touch', info.event);
                         },
-                        datesSet(datesSet: CalendarDatesSet) {
-                            //달력 초기 세팅
-                        },
+                        datesSet(datesSet: CalendarDatesSet) {},
                         noEventsContent(): string {
                             return '해당 기간에 등록된 활동이 없습니다.';
                         }
@@ -130,15 +137,16 @@ export default defineComponent({
         }
 
         function onSwipeCalendar(event) {
+          const currentHeight = parseInt(calendarHeight.value);
             const direction = event.direction;
             if (direction === 'left') {
-                instance.value.next();
+              instance.value.next();
             } else if (direction === 'right') {
-                instance.value.prev();
-            } else if (direction === 'down') {
-                console.log('down');
-            } else if (direction === 'up') {
-                console.log('up');
+              instance.value.prev();
+            } else if (direction === 'up' && currentHeight > 300) {
+              calendarHeight.value = currentHeight - 200 + 'px';
+            } else if(direction === 'down' && currentHeight < 500){
+              calendarHeight.value = currentHeight + 200 + 'px';
             }
         }
 
@@ -148,19 +156,13 @@ export default defineComponent({
 
         return {
             calendarRef,
+            calendarHeight,
             onSwipeCalendar
         };
     }
 });
 </script>
 <style scoped>
-:deep(.ec-title) {
-    font-size: 15px;
-    font-weight: bold;
-}
-:deep(.ec-content .ec-days .ec-day) {
-    height: 90px;
-}
 :deep(.ec-content .ec-days .ec-day .ec-day-head) {
     text-align: center;
 }

@@ -484,5 +484,20 @@ export const eventItems = [
         planYn: 'Y',
         ccList: ['xenopjw'],
         attachments: ['190b5946-2439-45f2-b6f1-fcf2cec54b62']
+    },
+    {
+        skedCode: 'SA0000083',
+        title: '관련조직 테스트',
+        category: '301',
+        result: null,
+        start: '2024-10-20 00:00:30',
+        end: '2024-11-01 00:00:30',
+        createUserId: 'jhyum',
+        createUserName: '염정현',
+        createDateTime: '2024-09-25 16:57:04.969',
+        createDeptName: '상자영업1팀 팀원',
+        planYn: 'Y',
+        ccList: ['xenopjw'],
+        attachments: ['190b5946-2439-45f2-b6f1-fcf2cec54b62']
     }
 ];
