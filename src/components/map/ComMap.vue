@@ -3,19 +3,14 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref, toRefs} from 'vue';
+import {onMounted, ref} from 'vue';
 
 //defineEmits
-const emit = defineEmits(['select', 'search-completed', 'markerAdded']);
+const emit = defineEmits(['select', 'search-completed']);
 //defineProps
 
 //TODO maxMarkers default 변경 예정 .
-
 const props = defineProps({
-    canAddMultipleMarkers: {
-        type: Boolean,
-        default: false
-    },
     maxMarkers: {
         type: Number,
         default: Infinity
