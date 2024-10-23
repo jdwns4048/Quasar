@@ -1,4 +1,5 @@
 <template>
+    <!--  <div>메인 레이아웃</div>-->
     <q-layout view="lHh Lpr lFf">
         <q-header elevated>
             <q-toolbar>
@@ -60,14 +61,14 @@ function toggleLeftDrawer() {
  */
 function goBack() {
     // router.back();
-  router.forward();
+    router.forward();
 }
 
 /**
  * 앞으로 가기
  */
-function goForward(){
-  router.forward();
+function goForward() {
+    router.forward();
 }
 
 /**

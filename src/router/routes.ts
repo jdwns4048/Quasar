@@ -3,7 +3,7 @@ import {RouteRecordRaw} from 'vue-router';
 const routes: RouteRecordRaw[] = [
     {
         path: '/',
-        component: () => import('layouts/MainLayout.vue'),
+        component: () => import('pages/common/layouts/MainLayout.vue'),
         children: [
             {path: '', component: () => import('pages/IndexPage.vue')},
             {path: 'autocomplete', component: () => import('pages/test/Autocomplete.vue')},
