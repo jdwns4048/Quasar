@@ -1,7 +1,8 @@
 <template>
     <div>
         <h6>영업활동 Main</h6>
-        <q-btn @click="go">영업활동 뷰어 페이지로 이동</q-btn>
+        <q-btn @click="go('sales-activity/viewer')">영업활동 뷰어 페이지로 이동</q-btn>
+        <q-btn @click="go('sales-activity/editor')">활동추가</q-btn>
     </div>
 </template>
 
@@ -17,9 +18,9 @@ const router = useRouter();
 
 // 함수 정의 (camelCase, 동사 + 명사 구조)
 
-function go() {
+function go(path: string) {
     router.push({
-        path: '/sales-activity/viewer'
+        path: '/' + path
     });
 }
 

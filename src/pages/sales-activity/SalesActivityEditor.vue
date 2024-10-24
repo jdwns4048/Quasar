@@ -1,5 +1,5 @@
 <template>
-    <div><h6>영업활동 Editor</h6></div>
+    <div><h6>영업활동 Editor / 활동추가</h6></div>
 </template>
 
 <script setup lang="ts">

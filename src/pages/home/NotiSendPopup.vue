@@ -1,19 +1,34 @@
 <template>
-    <div><h6>알림보내기 팝업</h6></div>
+    <q-dialog v-model="isOpened" maximized>
+        <q-card class="q-card">
+            <div><h6>알림보내기 팝업</h6></div>
+            <div>
+                <q-btn @click="close">닫기</q-btn>
+            </div>
+        </q-card>
+    </q-dialog>
 </template>
 
 <script setup lang="ts">
-//import
+import {ref} from 'vue';
 
-// 상수 정의 (UPPER_SNAKE_CASE)
+defineExpose({open});
 
-// 변수 정의 (camelCase)
+const isOpened = ref<boolean>(false);
 
-//-------- watch, watchEffect --------
+function open() {
+    isOpened.value = true;
+}
 
-// 함수 정의 (camelCase, 동사 + 명사 구조)
+function close() {
+    isOpened.value = false;
+    clear();
+}
 
-// 이벤트 핸들러 정의 (on + 명사 + 동사 구조)
-
-//-------- 라이프 사이클 --------
+function clear() {}
 </script>
+<style>
+.q-card {
+    height: 100vh;
+}
+</style>
