@@ -1,5 +1,5 @@
 <template>
-    <div>담당자 Editor</div>
+    <div><h6>담당자 Editor</h6></div>
 </template>
 
 <script setup lang="ts">

@@ -1,5 +1,5 @@
 <template>
-    <div>영업활동 Viewer</div>
+    <div><h6>영업활동 Viewer</h6></div>
 </template>
 
 <script setup lang="ts">

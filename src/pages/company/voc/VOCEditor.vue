@@ -1,5 +1,5 @@
 <template>
-    <div>VOC editor</div>
+    <div><h6>VOC editor</h6></div>
 </template>
 
 <script setup lang="ts">

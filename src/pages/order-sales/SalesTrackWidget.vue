@@ -1,5 +1,5 @@
 <template>
-    <div>판매실적 위젯</div>
+    <div><h6>판매실적 위젯</h6></div>
 </template>
 
 <script setup lang="ts">

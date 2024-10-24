@@ -1,5 +1,5 @@
 <template>
-    <div>위치보기</div>
+    <div><h6>위치보기</h6></div>
 </template>
 
 <script setup lang="ts">

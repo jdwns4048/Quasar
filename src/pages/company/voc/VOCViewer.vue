@@ -1,5 +1,5 @@
 <template>
-    <div>VOC viewer</div>
+    <div><h6>VOC viewer</h6></div>
 </template>
 
 <script setup lang="ts">

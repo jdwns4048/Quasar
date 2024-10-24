@@ -1,5 +1,5 @@
 <template>
-    <div>개요 viewer</div>
+    <div><h6>개요 viewer</h6></div>
 </template>
 
 <script setup lang="ts">

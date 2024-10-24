@@ -1,5 +1,5 @@
 <template>
-    <div>알림 이력</div>
+    <div><h6>알림 이력</h6></div>
 </template>
 
 <script setup lang="ts">

@@ -1,5 +1,5 @@
 <template>
-    <div>판가현황 위젯</div>
+    <div><h6>판가현황 위젯</h6></div>
 </template>
 
 <script setup lang="ts">

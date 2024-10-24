@@ -1,5 +1,5 @@
 <template>
-    <div>알림보내기 팝업</div>
+    <div><h6>알림보내기 팝업</h6></div>
 </template>
 
 <script setup lang="ts">
