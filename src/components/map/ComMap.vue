@@ -25,6 +25,7 @@ const map = ref<kakao.maps.Map | null>(null);
 const marker = ref<kakao.maps.Marker | null>(null);
 const geocoder = ref<kakao.maps.services.Geocoder | null>(null);
 const address = ref<string>('');
+let first = true;
 
 //TODO async, await 형식으로 변경 예정 .
 function loadMap() {
@@ -52,10 +53,11 @@ function initMap() {
 }
 
 function positionAddress() {
-    for (let i = 0; i < props.positionMarkers.length; i++) {
-        searchByAddress(props.positionMarkers[i].address);
+    for (let index = 0; index < props.positionMarkers.length; index++) {
+        searchByAddress(props.positionMarkers[index].address, index === 0);
     }
 }
+
 /**
  * 지도 클릭 시 클릭한 위치의 좌표 정보를 통해 주소를 요청하고 해당 좌표에 마커를 표시한다.
  * @param event
@@ -72,11 +74,12 @@ function onMapClick(event: kakao.maps.event.MouseEvent): void {
 /**
  * 주소 정보에 해당하는 좌표값을 요청.
  * @param address
+ * @param setCenter
  */
 
-function searchByAddress(address: string) {
+function searchByAddress(address: string, setCenter: boolean) {
     if (geocoder.value) {
-        geocoder.value.addressSearch(address, handleSearchResult);
+        geocoder.value.addressSearch(address, (result, status) => handleSearchResult(result, status, setCenter));
     }
 }
 
@@ -97,7 +100,7 @@ function searchByCoord(coords: [number, number]) {
  */
 function search(value: string | [number, number]) {
     if (!value) return kakao.maps.load(initMap);
-    typeof value === 'string' ? searchByAddress(value) : searchByCoord(value);
+    typeof value === 'string' ? searchByAddress(value, setCenter) : searchByCoord(value);
 }
 
 /**
@@ -127,11 +130,14 @@ function updateAddress(result: any, status: kakao.maps.services.Status) {
  * @param result
  * @param status
  */
-function handleSearchResult(result: any, status: kakao.maps.services.Status): void {
+function handleSearchResult(result: any, status: kakao.maps.services.Status, setCenter: boolean): void {
     if (status === kakao.maps.services.Status.OK) {
         const latlng = new kakao.maps.LatLng(Number(result[0].y), Number(result[0].x));
         setMarker(latlng);
-        map.value?.setCenter(latlng);
+
+        if (setCenter) {
+            map.value?.setCenter(latlng);
+        }
     }
 }
 
