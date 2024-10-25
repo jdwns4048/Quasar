@@ -7,13 +7,14 @@ import {onMounted, ref} from 'vue';
 
 //defineEmits
 const emit = defineEmits(['select', 'search-completed']);
+
 //defineProps
 
 //TODO maxMarkers default 변경 예정 .
 const props = defineProps({
-    maxMarkers: {
-        type: Number,
-        default: Infinity
+    positionMarkers: {
+        type: Array as () => Array<{title: string; address: string}>,
+        default: () => []
     }
 });
 //defineExpose
@@ -24,24 +25,8 @@ const map = ref<kakao.maps.Map | null>(null);
 const marker = ref<kakao.maps.Marker | null>(null);
 const geocoder = ref<kakao.maps.services.Geocoder | null>(null);
 const address = ref<string>('');
-const markers = ref<kakao.maps.Marker[]>([]); // 추가: 마커들을 저장할 배열 레퍼런스
-const positions = [
-    {
-        title: '기흥테라타워',
-        lat: 37.2312,
-        lng: 127.071
-    },
-    {
-        title: '자동차검사소',
-        lat: 37.23087870081864,
-        lng: 127.06806260767284
-    },
-    {
-        title: '르노코리아',
-        lat: 37.22932910715828,
-        lng: 127.06770062570571
-    }
-];
+
+const bounds = ref<kakao.maps.LatLngBounds>();
 
 //TODO async, await 형식으로 변경 예정 .
 function loadMap() {
@@ -59,23 +44,19 @@ function loadMap() {
 /** Handlers **/
 function initMap() {
     const container = document.getElementById('map') as HTMLElement;
-    const options = {center: new kakao.maps.LatLng(37.2312, 127.071), level: 5};
+    const options = {center: new kakao.maps.LatLng(37.2312, 127.071), level: 3};
+
     map.value = new kakao.maps.Map(container, options);
-
     geocoder.value = new kakao.maps.services.Geocoder();
-    geocoder.value.coord2Address(options.center.getLng(), options.center.getLat(), updateAddress);
 
-    for (let i = 0; i < props.maxMarkers; i++) {
-        if (map.value) {
-            const marker = new kakao.maps.Marker({
-                map: map.value,
-                position: new kakao.maps.LatLng(positions[i].lat, positions[i].lng)
-            });
-            markers.value.push(marker); // Marker 추가를 배열에 추가
-        }
-    }
-
+    positionAddress();
     kakao.maps.event.addListener(map.value, 'click', onMapClick);
+}
+
+function positionAddress() {
+    for (let i = 0; i < props.positionMarkers.length; i++) {
+        searchByAddress(props.positionMarkers[i].address);
+    }
 }
 /**
  * 지도 클릭 시 클릭한 위치의 좌표 정보를 통해 주소를 요청하고 해당 좌표에 마커를 표시한다.
@@ -127,7 +108,8 @@ function search(value: string | [number, number]) {
  * @param point
  */
 function setMarker(point: kakao.maps.LatLng): void {
-    if (marker.value) {
+    if (map.value) {
+        marker.value = new kakao.maps.Marker({map: map.value, position: point});
         marker.value.setPosition(point);
     }
 }

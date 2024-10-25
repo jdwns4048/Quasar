@@ -1,9 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <com-map-view ref="mapViewRef" @select="handleMapClick" @search-completed="handleSearchCompletion" :max-markers="2"></com-map-view>
-        <q-btn class="q-mt-md q-mr-md" color="primary" label="주소 검색" @click="openPopup" />
-        <q-btn class="q-mt-md" color="primary" label="원위치(clear)" @click="clear" />
-        <com-search-address-popup ref="popup" />
+        <com-map-view ref="mapViewRef" @select="handleMapClick" @search-completed="handleSearchCompletion" :positionMarkers="positionMarkers"></com-map-view>
         <q-input class="textarea" v-model="address" label="map data" filled type="textarea" readonly />
     </q-page>
 </template>
@@ -11,23 +8,13 @@
 <script setup lang="ts">
 import {ref} from 'vue';
 import ComMapView from 'components/map/ComMap.vue';
-import ComSearchAddressPopup from 'components/address/ComSearchAddressPopup.vue';
-import {Postcode} from 'src/defines/postcode';
-const popup = ref<typeof ComSearchAddressPopup | null>(null);
 const address = ref<string>('');
-const coordinates = ref<null>();
 const mapViewRef = ref<typeof ComMapView | null>(null);
-
-/**
- * 주소 검색 팝업을 엽니다.
- */
-async function openPopup(): Promise<void> {
-    if (popup.value) {
-        const data: Postcode = await popup.value.open();
-        address.value = data.address;
-        searchAddress(address.value);
-    }
-}
+const positionMarkers = ref([
+    {title: '농심', address: '서울시 동작구 여의대방로 112(신대방동)'},
+    {title: '롯데백화점관악점', address: '서울 관악구 봉천로 209'},
+    {title: '부산역', address: '부산 동구 중앙대로 206'}
+]);
 
 /**
  * 지도 클릭 이벤트의 정보
@@ -55,15 +42,6 @@ function searchAddress(addressData: string | [number, number]) {
  */
 function handleSearchCompletion(result: string) {
     address.value = result;
-}
-
-/**
- * 주소 초기화(원위치)
- */
-function clear() {
-    if (mapViewRef.value) {
-        mapViewRef.value.clear();
-    }
 }
 </script>
 
