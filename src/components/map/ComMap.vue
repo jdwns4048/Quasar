@@ -25,7 +25,6 @@ const map = ref<kakao.maps.Map | null>(null);
 const marker = ref<kakao.maps.Marker | null>(null);
 const geocoder = ref<kakao.maps.services.Geocoder | null>(null);
 const address = ref<string>('');
-let first = true;
 
 //TODO async, await 형식으로 변경 예정 .
 function loadMap() {
@@ -100,6 +99,7 @@ function searchByCoord(coords: [number, number]) {
  */
 function search(value: string | [number, number]) {
     if (!value) return kakao.maps.load(initMap);
+    const setCenter = true;
     typeof value === 'string' ? searchByAddress(value, setCenter) : searchByCoord(value);
 }
 
