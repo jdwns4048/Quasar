@@ -1,16 +1,17 @@
 <template>
-    <div><h6>수주판매 Main</h6></div>
-    <q-tabs v-model="tab" class="text-teal">
-        <q-tab name="sales" label="판매실적" />
-        <q-tab name="price" label="판가현황" />
-    </q-tabs>
+    <main-layout>
+        <q-tabs v-model="tab" class="text-teal">
+            <q-tab name="sales" label="판매실적" />
+            <q-tab name="price" label="판가현황" />
+        </q-tabs>
 
-    <div v-if="tab === 'sales'">
-        <sales-track-widget></sales-track-widget>
-    </div>
-    <div v-else>
-        <price-trend-widget></price-trend-widget>
-    </div>
+        <div v-if="tab === 'sales'">
+            <sales-track-widget></sales-track-widget>
+        </div>
+        <div v-else>
+            <price-trend-widget></price-trend-widget>
+        </div>
+    </main-layout>
 </template>
 
 <script setup lang="ts">
@@ -30,4 +31,5 @@ const tab = ref('sales');
 //-------- 라이프 사이클 --------
 import PriceTrendWidget from 'pages/order-sales/PriceTrendWidget.vue';
 import SalesTrackWidget from 'pages/order-sales/SalesTrackWidget.vue';
+import MainLayout from 'pages/common/layouts/MainLayout.vue';
 </script>

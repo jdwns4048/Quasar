@@ -27,12 +27,18 @@ const routes: RouteRecordRaw[] = [
             {
                 path: 'home',
                 name: 'HomeMain',
-                component: () => import('pages/home/Home.vue')
+                component: () => import('pages/home/Home.vue'),
+                meta: {
+                    title: 'T-CRM'
+                }
             },
             {
                 path: 'notification',
                 name: 'Notification',
-                component: () => import('pages/home/Notification.vue')
+                component: () => import('pages/home/Notification.vue'),
+                meta: {
+                    title: '알림이력'
+                }
             }
         ]
     },
@@ -45,7 +51,10 @@ const routes: RouteRecordRaw[] = [
             {
                 path: 'main',
                 name: 'SalesActivityMain',
-                component: () => import('pages/sales-activity/SalesActivityMain.vue')
+                component: () => import('pages/sales-activity/SalesActivityMain.vue'),
+                meta: {
+                    title: '영업활동관리'
+                }
             },
             {
                 path: 'viewer',
@@ -68,7 +77,10 @@ const routes: RouteRecordRaw[] = [
             {
                 path: 'main',
                 name: 'OrderSalesMain',
-                component: () => import('pages/order-sales/OrderSalesMain.vue')
+                component: () => import('pages/order-sales/OrderSalesMain.vue'),
+                meta: {
+                    title: '수주판매현황'
+                }
             }
         ]
     },
@@ -81,7 +93,10 @@ const routes: RouteRecordRaw[] = [
             {
                 path: 'main',
                 name: 'CompanyInfoMain',
-                component: () => import('pages/company/CompanyInfoMain.vue')
+                component: () => import('pages/company/CompanyInfoMain.vue'),
+                meta: {
+                    title: '고객정보'
+                }
             },
             {
                 path: 'overview-viewer',
@@ -109,7 +124,10 @@ const routes: RouteRecordRaw[] = [
             {
                 path: 'main',
                 name: 'ContactInfoMain',
-                component: () => import('pages/contact/ContactInfoMain.vue')
+                component: () => import('pages/contact/ContactInfoMain.vue'),
+                meta: {
+                    title: '고객담당자정보'
+                }
             },
             {
                 path: 'viewer',

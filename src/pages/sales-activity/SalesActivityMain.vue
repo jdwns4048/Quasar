@@ -1,30 +1,20 @@
 <template>
-    <div>
-        <h6>영업활동 Main</h6>
-        <q-btn @click="go('sales-activity/viewer')">영업활동 뷰어 페이지로 이동</q-btn>
-        <q-btn @click="go('sales-activity/editor')">활동추가</q-btn>
-    </div>
+    <main-layout>
+        <q-tabs v-model="tab" class="text-teal">
+            <q-tab name="all" label="전체활동" />
+            <q-tab name="completed" label="실적 입력 활동" />
+            <q-tab name="inCompleted" label="실적 미입력 활동" />
+        </q-tabs>
+
+        <div v-if="tab === 'all'">전체활동</div>
+        <div v-else-if="tab === 'completed'">실적입력활동</div>
+        <div v-else>실적미입력활동</div>
+    </main-layout>
 </template>
 
 <script setup lang="ts">
-import {useRouter} from 'vue-router';
+import MainLayout from 'pages/common/layouts/MainLayout.vue';
+import {ref} from 'vue';
 
-// 상수 정의 (UPPER_SNAKE_CASE)
-
-// 변수 정의 (camelCase)
-const router = useRouter();
-
-//-------- watch, watchEffect --------
-
-// 함수 정의 (camelCase, 동사 + 명사 구조)
-
-function go(path: string) {
-    router.push({
-        path: '/' + path
-    });
-}
-
-// 이벤트 핸들러 정의 (on + 명사 + 동사 구조)
-
-//-------- 라이프 사이클 --------
+const tab = ref('overview');
 </script>
