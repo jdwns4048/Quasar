@@ -26,8 +26,6 @@ const marker = ref<kakao.maps.Marker | null>(null);
 const geocoder = ref<kakao.maps.services.Geocoder | null>(null);
 const address = ref<string>('');
 
-const bounds = ref<kakao.maps.LatLngBounds>();
-
 //TODO async, await 형식으로 변경 예정 .
 function loadMap() {
     if (document.querySelector('script[src*="dapi.kakao.com/v2/maps/sdk.js"]')) {
@@ -60,9 +58,8 @@ function positionAddress() {
 }
 /**
  * 지도 클릭 시 클릭한 위치의 좌표 정보를 통해 주소를 요청하고 해당 좌표에 마커를 표시한다.
- * @param event - 클릭한 위치의 좌표
+ * @param event
  */
-
 function onMapClick(event: kakao.maps.event.MouseEvent): void {
     const coords = event.latLng;
     emit('select', event);
