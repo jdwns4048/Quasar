@@ -1,11 +1,13 @@
 <template>
-    <div><h6>고객담당자정보 Main</h6></div>
-    <q-btn @click="go">영업활동 뷰어 페이지로 이동</q-btn>
+    <main-layout>
+        <q-btn @click="go">영업활동 뷰어 페이지로 이동</q-btn>
+    </main-layout>
 </template>
 
 <script setup lang="ts">
 //import
 import {useRouter} from 'vue-router';
+import MainLayout from 'pages/common/layouts/MainLayout.vue';
 // 상수 정의 (UPPER_SNAKE_CASE)
 
 // 변수 정의 (camelCase)

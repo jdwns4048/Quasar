@@ -1,53 +1,52 @@
 <template>
-    <!--  <div>메인 레이아웃</div>-->
-    <q-layout view="lHh Lpr lFf">
-        <q-header elevated>
-            <q-toolbar>
-                <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
-                <q-toolbar-title class="text-center full-width" clickable @click="changeUrl('/')"> T-CRM </q-toolbar-title>
-                <q-icon name="notifications" style="font-size: 24px" />
-            </q-toolbar>
-        </q-header>
-
-        <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-            <q-list>
-                <q-item-label header>
-                    <div style="font-size: 18px; font-weight: bold; color: #1976d2">Quick Menu</div>
-                </q-item-label>
+    <q-layout>
+        <q-page-container class="container">
+            <div class="header">
+                <q-icon name="menu" style="font-size: 40px" @click="toggleLeftDrawer" />
+                <q-toolbar-title class="text-center full-width"> {{ title }} </q-toolbar-title>
+                <q-icon name="notifications" style="font-size: 40px" @click="changeUrl('/notification')" />
+            </div>
+            <div class="body">
+                <slot></slot>
+            </div>
+            <!--            <q-btn flat unelevated icon="arrow_back" style="color: black" @click="goBack" />-->
+            <!--            <q-btn flat unelevated icon="arrow_forward" style="color: black" @click="goForward" />-->
+        </q-page-container>
+        <q-drawer v-model="leftDrawerOpen" show-if-above>
+            <q-list style="margin-top: 30px; color: darkslategray">
                 <q-item clickable @click="changeUrl('/')">
                     <q-icon name="home" style="font-size: 24px; margin-right: 15px" />
                     <q-item-section> Home </q-item-section>
                 </q-item>
                 <q-item clickable @click="changeUrl('/sales-activity')">
                     <q-icon name="calendar_month" style="font-size: 24px; margin-right: 15px" />
-                    <q-item-section> 영업활동관리 </q-item-section>
+                    <q-item-section> 영업활동 </q-item-section>
                 </q-item>
-                <q-item clickable @click="changeUrl('/map')">
-                    <q-icon name="pin_drop" style="font-size: 24px; margin-right: 15px" />
-                    <q-item-section> 지도 </q-item-section>
+                <q-item clickable @click="changeUrl('/order-sales')">
+                    <q-icon name="leaderboard" style="font-size: 24px; margin-right: 15px" />
+                    <q-item-section> 판매현황 </q-item-section>
                 </q-item>
-                <q-item clickable @click="changeUrl('/searchAddress')">
-                    <q-icon name="my_location" style="font-size: 24px; margin-right: 15px" />
-                    <q-item-section> 주소 검색 </q-item-section>
+                <q-item clickable @click="changeUrl('/company')">
+                    <q-icon name="apartment" style="font-size: 24px; margin-right: 15px" />
+                    <q-item-section> 고객정보 </q-item-section>
+                </q-item>
+                <q-item clickable @click="changeUrl('/contact')">
+                    <q-icon name="person" style="font-size: 24px; margin-right: 15px" />
+                    <q-item-section> 고객담당자 </q-item-section>
                 </q-item>
             </q-list>
         </q-drawer>
-
-        <q-page-container padding>
-            <!-- TODO 해당 버튼의 레이아웃 고민할것 -->
-            <q-btn flat unelevated icon="arrow_back" style="color: black" @click="goBack" />
-            <q-btn flat unelevated icon="arrow_forward" style="color: black" @click="goForward" />
-            <router-view />
-        </q-page-container>
     </q-layout>
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue';
-import {useRouter} from 'vue-router';
+import {computed, ref} from 'vue';
+import {useRoute, useRouter} from 'vue-router';
 
 const router = useRouter();
+const route = useRoute();
 const leftDrawerOpen = ref(false);
+const title = computed(() => route.meta.title || route.name);
 
 /**
  * navigation toggle
@@ -84,3 +83,23 @@ defineOptions({
     name: 'MainLayout'
 });
 </script>
+<style>
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: darkslategray;
+    height: 70px;
+    margin: 0 20px;
+}
+
+.body {
+    flex: 1;
+}
+</style>
