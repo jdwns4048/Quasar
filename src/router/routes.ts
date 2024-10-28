@@ -143,6 +143,11 @@ const routes: RouteRecordRaw[] = [
                 path: 'editor',
                 name: 'ContactInfoEditor',
                 component: () => import('pages/contact/ContactInfoEditor.vue')
+            },
+            {
+                path: 'searchUser',
+                name: 'UserPopup',
+                component: () => import('pages/contact/UserPopup.vue')
             }
         ]
     },
