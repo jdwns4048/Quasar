@@ -43,6 +43,11 @@ const routes: RouteRecordRaw[] = [
         ]
     },
     {
+      path: '/test',
+      name: 'infiniteScroll',
+      component:() => import('pages/test/InfiniteScroll.vue')
+    },
+    {
         path: '/sales-activity',
         name: 'SalesActivity',
         component: () => import('pages/sales-activity/index.vue'),
@@ -51,7 +56,7 @@ const routes: RouteRecordRaw[] = [
             {
                 path: 'main',
                 name: 'SalesActivityMain',
-                component: () => import('pages/sales-activity/SalesActivityMain.vue'),
+                component: () => import('pages/sales/SalesActivityMain.vue'),
                 meta: {
                     title: '영업활동관리'
                 }

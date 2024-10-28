@@ -1,5 +1,7 @@
 <template>
-    <div ref="calendarRef" :style="{height: calendarHeight}" v-touch-swipe.mouse="onSwipeCalendar"></div>
+    <div v-touch-swipe.mouse="onSwipeCalendar">
+        <div ref="calendarRef" :style="{height: calendarHeight}"></div>
+    </div>
 </template>
 
 <script lang="ts">
@@ -61,15 +63,11 @@ export type CalendarDatesSet = {
 
 export default defineComponent({
     name: 'CalendarMain',
-    emits: ['item-touch', 'day-touch'],
+    emits: ['day-touch'],
     props: {
         items: {
             type: Array as PropType<Array<Record<string, any>>>,
             default: () => []
-        },
-        viewType:{
-            type: String,
-            default: 'dayGridMonth'
         }
     },
 
@@ -86,15 +84,15 @@ export default defineComponent({
                 props: {
                     plugins: [TimeGrid, DayGrid, List, Interaction],
                     options: {
-                        view: props.viewType,
+                        view: 'dayGridMonth',
                         dayHeaderFormat: {weekday: 'short'}, // default
                         headerToolbar: {
-                            start: '',
+                            start: 'title',
                             center: '',
                             end: ''
                         },
                         events: eventItems.value,
-                        eventColor:'#ED1C24',
+                        eventColor: '#ED1C24',
                         dayMaxEvents: true,
                         height: '100%', // {'auto' | 'px' | '%'}
                         nowIndicator: true,
@@ -103,11 +101,7 @@ export default defineComponent({
                         eventDurationEditable: false,
                         eventContent(info: CalendarEventContent) {
                             //스케쥴 커스터마이징
-                            const {event} = info;
                             const el = document.createElement('div');
-                            if(props.viewType === 'listDay'){
-                              el.textContent = event.title;
-                            }
                             return {domNodes: [el]};
                         },
                         moreLinkContent(item: CalendarMoreLink) {
@@ -121,14 +115,6 @@ export default defineComponent({
                         dateClick(info: CalendarEventInfo) {
                             //날짜 클릭
                             context.emit('day-touch', info);
-                        },
-                        eventClick(info: CalendarEventInfo) {
-                            //스케줄 클릭
-                            context.emit('item-touch', info.event);
-                        },
-                        datesSet(datesSet: CalendarDatesSet) {},
-                        noEventsContent(): string {
-                            return '해당 기간에 등록된 활동이 없습니다.';
                         }
                     }
                 }
@@ -137,16 +123,11 @@ export default defineComponent({
         }
 
         function onSwipeCalendar(event) {
-          const currentHeight = parseInt(calendarHeight.value);
             const direction = event.direction;
             if (direction === 'left') {
-              instance.value.next();
-            } else if (direction === 'right') {
               instance.value.prev();
-            } else if (direction === 'up' && currentHeight > 300) {
-              calendarHeight.value = currentHeight - 200 + 'px';
-            } else if(direction === 'down' && currentHeight < 500){
-              calendarHeight.value = currentHeight + 200 + 'px';
+            } else if (direction === 'right') {
+              instance.value.next();
             }
         }
 

@@ -1,85 +1,65 @@
 <template>
-      <q-card v-model="isVisible" v-touch-swipe.mouse="onSwipe" >
-        <q-card-section>
-          <p>{{activityName}}</p>
-          <div style="display: flex; gap: 10px">
-              <q-input filled v-model="startDate" mask="####-##-##" label="시작일">
-                <template v-slot:append>
-                  <q-icon name="event" class="cursor-pointer">
-                    <q-menu>
-                      <q-date v-model="startDate" :title="startDate" mask="YYYY-MM-DD" subtitle="시작일">
-                        <div class="row items-center justify-end">
-                          <q-btn v-close-popup label="Close" color="primary" flat />
-                        </div>
-                      </q-date>
-                    </q-menu>
-                  </q-icon>
-                </template>
-              </q-input>
-
-              <q-input filled v-model="endDate" mask="####-##-##" label="종료일">
-                <template v-slot:append>
-                  <q-icon name="event" class="cursor-pointer">
-                    <q-menu>
-                      <q-date v-model="endDate" :title="endDate" mask="YYYY-MM-DD" subtitle="종료일">
-                        <div class="row items-center justify-end">
-                          <q-btn v-close-popup label="Close" color="primary" flat />
-                        </div>
-                      </q-date>
-                    </q-menu>
-                  </q-icon>
-                </template>
-              </q-input>
-            </div>
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat label="닫기" @click="onClose" />
-          <q-btn flat label="저장" @click="onSave" />
-        </q-card-actions>
-      </q-card>
+  <q-card v-touch-swipe.mouse="onSwipePage">
+    <q-card-section>
+      <div>{{ formattedDate }}</div>
+    </q-card-section>
+    <q-card-section>
+      <div v-if="dailyEvents.length > 0">
+        <q-item v-for="(event, index) in dailyEvents" :key="index">
+          <q-item-section>{{ event.title }}</q-item-section>
+        </q-item>
+      </div>
+      <div v-else>일정이 없습니다.</div>
+    </q-card-section>
+  </q-card>
 </template>
+<script setup lang="ts">
+import {useRoute} from 'vue-router';
+import {computed, ref, watch} from 'vue';
+import {eventItems} from 'src/data/events';
+import {dateToStr, strToDate} from 'src/plugin/utils/format/date';
 
-<script lang="ts">
-import {defineComponent, ref} from 'vue';
-import {dateToStr} from 'src/plugin/utils/format/date';
+interface Event {
+  skedCode: string;
+  start: string;
+  end: string;
+  title: string;
+}
 
-export default defineComponent({
-    name: 'CalendarEdit',
-    setup() {
-        const isVisible = ref(false);
-        const activityName = ref('');
-        const startDate = ref('');
-        const endDate = ref('');
+const route = useRoute();
+const selectedDate = strToDate(route.query.date as string);
+const date = ref<Date>(selectedDate);
+const dailyEvents = ref<Event[]>(getEventsByDate(date.value));
 
-        function open(event) {
-            isVisible.value = true;
-            activityName.value = event.title;
-            startDate.value = dateToStr(event.start, 'YYYY-MM-DD');
-            endDate.value = dateToStr(event.end, 'YYYY-MM-DD');
-        }
+const formattedDate = computed(() => dateToStr(date.value, 'YYYY-MM-DD'));
 
-        function onClose() {
-            activityName.value = '';
-            isVisible.value = false;
-        }
-        function onSave() {
-            isVisible.value = false;
-        }
-        function onSwipe(event){
-          console.log('swipe');
-        }
-        return {
-            isVisible,
-            activityName,
-            startDate,
-            endDate,
-            open,
-            onClose,
-            onSave,
-          onSwipe
-        };
-    }
+watch(date, newDate => {
+  dailyEvents.value = getEventsByDate(newDate);
 });
+
+function getEventsByDate(targetDate: Date) {
+  return eventItems.filter(event => {
+    const startDate = strToDate(event.start, 'YYYY-MM-DD');
+    const endDate = strToDate(event.end, 'YYYY-MM-DD');
+    return targetDate >= startDate && targetDate <= endDate;
+  });
+}
+
+function onSwipePage(event) {
+  const direction = event.direction;
+  if (direction === 'left') {
+    next();
+  } else if (direction === 'right') {
+    previous();
+  }
+}
+
+function previous() {
+  date.value = new Date(date.value.setDate(date.value.getDate() - 1));
+}
+
+function next() {
+  date.value = new Date(date.value.setDate(date.value.getDate() + 1));
+}
 </script>
 
-<style scoped></style>
