@@ -1,5 +1,7 @@
 <template>
-    <div><h6>VOC viewer</h6></div>
+    <viewer-layout>
+        <div><h6>VOC viewer</h6></div>
+    </viewer-layout>
 </template>
 
 <script setup lang="ts">
@@ -16,4 +18,5 @@
 // 이벤트 핸들러 정의 (on + 명사 + 동사 구조)
 
 //-------- 라이프 사이클 --------
+import ViewerLayout from 'pages/common/layouts/ViewerLayout.vue';
 </script>

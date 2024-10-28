@@ -1,10 +1,12 @@
 <template>
-    <div><h6>담당자 viewer</h6></div>
-    <q-btn @click="go">담당자 편집 페이지로 이동</q-btn>
+    <viewer-layout>
+        <q-btn @click="go">담당자 편집 페이지로 이동</q-btn>
+    </viewer-layout>
 </template>
 
 <script setup lang="ts">
 import {useRouter} from 'vue-router';
+import ViewerLayout from 'pages/common/layouts/ViewerLayout.vue';
 
 const router = useRouter();
 

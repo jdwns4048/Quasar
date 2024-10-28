@@ -43,9 +43,9 @@ const routes: RouteRecordRaw[] = [
         ]
     },
     {
-      path: '/test',
-      name: 'infiniteScroll',
-      component:() => import('pages/test/InfiniteScroll.vue')
+        path: '/test',
+        name: 'infiniteScroll',
+        component: () => import('pages/test/InfiniteScroll.vue')
     },
     {
         path: '/sales-activity',
@@ -64,7 +64,10 @@ const routes: RouteRecordRaw[] = [
             {
                 path: 'viewer',
                 name: 'SalesActivityViewer',
-                component: () => import('pages/sales-activity/SalesActivityViewer.vue')
+                component: () => import('pages/sales-activity/SalesActivityViewer.vue'),
+                meta: {
+                    title: '영업활동'
+                }
             },
             {
                 path: 'editor',
@@ -106,17 +109,26 @@ const routes: RouteRecordRaw[] = [
             {
                 path: 'overview-viewer',
                 name: 'OverviewViewer',
-                component: () => import('pages/company/overview/OverviewViewer.vue')
+                component: () => import('pages/company/overview/OverviewViewer.vue'),
+                meta: {
+                    title: '개요'
+                }
             },
             {
                 path: 'voc-viewer',
                 name: 'VOCViewer',
-                component: () => import('pages/company/voc/VOCViewer.vue')
+                component: () => import('pages/company/voc/VOCViewer.vue'),
+                meta: {
+                    title: 'VOC'
+                }
             },
             {
                 path: 'activity-history-viewer',
                 name: 'ActivityHistoryViewer',
-                component: () => import('pages/company/activity-history/ActivityHistoryViewer.vue')
+                component: () => import('pages/company/activity-history/ActivityHistoryViewer.vue'),
+                meta: {
+                    title: '활동이력'
+                }
             }
         ]
     },
@@ -137,7 +149,10 @@ const routes: RouteRecordRaw[] = [
             {
                 path: 'viewer',
                 name: 'ContactInfoViewer',
-                component: () => import('pages/contact/ContactInfoViewer.vue')
+                component: () => import('pages/contact/ContactInfoViewer.vue'),
+                meta: {
+                    title: '고객담당자정보'
+                }
             },
             {
                 path: 'editor',

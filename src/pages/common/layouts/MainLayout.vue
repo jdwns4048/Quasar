@@ -1,16 +1,18 @@
 <template>
     <q-layout>
-        <q-page-container class="container">
-            <div class="header">
-                <q-icon name="menu" style="font-size: 40px" @click="toggleLeftDrawer" />
-                <q-toolbar-title class="text-center full-width"> {{ title }} </q-toolbar-title>
-                <q-icon name="notifications" style="font-size: 40px" @click="changeUrl('/notification')" />
-            </div>
-            <div class="body">
-                <slot></slot>
-            </div>
-            <!--            <q-btn flat unelevated icon="arrow_back" style="color: black" @click="goBack" />-->
-            <!--            <q-btn flat unelevated icon="arrow_forward" style="color: black" @click="goForward" />-->
+        <q-page-container>
+            <q-page class="container">
+                <div class="header">
+                    <q-icon name="menu" style="font-size: 25px" @click="toggleLeftDrawer" />
+                    <q-toolbar-title class="text-center full-width" style="font-size: 18px"> {{ title }} </q-toolbar-title>
+                    <q-icon name="notifications" style="font-size: 25px" @click="changeUrl('/notification')" />
+                </div>
+                <div class="body">
+                    <slot></slot>
+                </div>
+                <!--            <q-btn flat unelevated icon="arrow_back" style="color: black" @click="goBack" />-->
+                <!--            <q-btn flat unelevated icon="arrow_forward" style="color: black" @click="goForward" />-->
+            </q-page>
         </q-page-container>
         <q-drawer v-model="leftDrawerOpen" show-if-above>
             <q-list style="margin-top: 30px; color: darkslategray">

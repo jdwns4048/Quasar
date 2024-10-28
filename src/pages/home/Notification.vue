@@ -1,19 +1,52 @@
 <template>
-    <div><h6>알림 이력</h6></div>
+    <viewer-layout>
+        <div>
+            <q-list style="margin-top: 10px; color: darkslategray" bordered>
+                <q-expansion-item class="list-item" expand-separator icon="calendar_month" label="T-CRM 주요기능시연">
+                    <q-card class="card">
+                        <q-card-section>
+                            T-CRM Admin 공지 <br />
+                            설문일자 : 2024.09.40 <br />
+                            내용: 솔루션 기능 점검관련 운영 설문 조사를 실시하니 참여 부탁드립니다. <br />
+                            특이사항 : 내용조회 서비스 영향: 시스템 개선
+                        </q-card-section>
+                    </q-card>
+                </q-expansion-item>
+                <q-expansion-item class="list-item" expand-separator icon="calendar_month" label="T-CRM 주요기능시연">
+                    <q-card class="card">
+                        <q-card-section>
+                            T-CRM Admin 공지 <br />
+                            설문일자 : 2024.09.40 <br />
+                            내용: 솔루션 기능 점검관련 운영 설문 조사를 실시하니 참여 부탁드립니다. <br />
+                            특이사항 : 내용조회 서비스 영향: 시스템 개선
+                        </q-card-section>
+                    </q-card>
+                </q-expansion-item>
+                <q-expansion-item class="list-item" expand-separator icon="calendar_month" label="T-CRM 주요기능시연">
+                    <q-card class="card">
+                        <q-card-section>
+                            T-CRM Admin 공지 <br />
+                            설문일자 : 2024.09.40 <br />
+                            내용: 솔루션 기능 점검관련 운영 설문 조사를 실시하니 참여 부탁드립니다. <br />
+                            특이사항 : 내용조회 서비스 영향: 시스템 개선
+                        </q-card-section>
+                    </q-card>
+                </q-expansion-item>
+            </q-list>
+        </div>
+    </viewer-layout>
 </template>
 
 <script setup lang="ts">
-//import
-
-// 상수 정의 (UPPER_SNAKE_CASE)
-
-// 변수 정의 (camelCase)
-
-//-------- watch, watchEffect --------
-
-// 함수 정의 (camelCase, 동사 + 명사 구조)
-
-// 이벤트 핸들러 정의 (on + 명사 + 동사 구조)
-
-//-------- 라이프 사이클 --------
+import ViewerLayout from 'pages/common/layouts/ViewerLayout.vue';
 </script>
+<style>
+.list-item {
+    margin: 10px 10px;
+    border: 1px solid darkslategray;
+}
+
+.card {
+    height: fit-content;
+}
+</style>
